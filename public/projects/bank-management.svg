@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bankGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#C6FF3D" stop-opacity="0.08"/>
+      <stop offset="60%" stop-color="#141419" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0A0A0C" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="cardGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181820"/>
+      <stop offset="100%" stop-color="#0E0E12"/>
+    </linearGradient>
+    <filter id="shadowFilter3" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#000000" flood-opacity="0.75"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="1000" fill="#0A0A0C"/>
+  <rect width="1600" height="1000" fill="url(#bankGlow)"/>
+
+  <!-- Subtle Grid Pattern -->
+  <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
+    <line x1="300" y1="0" x2="300" y2="1000"/>
+    <line x1="600" y1="0" x2="600" y2="1000"/>
+    <line x1="900" y1="0" x2="900" y2="1000"/>
+    <line x1="1200" y1="0" x2="1200" y2="1000"/>
+  </g>
+
+  <!-- Main Software Interface Window -->
+  <g filter="url(#shadowFilter3)">
+    <rect x="200" y="100" width="1200" height="800" rx="16" fill="url(#cardGrad3)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    
+    <!-- Titlebar -->
+    <rect x="200" y="100" width="1200" height="54" rx="16" fill="#121216"/>
+    <rect x="200" y="138" width="1200" height="16" fill="#121216"/>
+    <line x1="200" y1="154" x2="1400" y2="154" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    
+    <circle cx="240" cy="127" r="6" fill="#FF5F56"/>
+    <circle cx="262" cy="127" r="6" fill="#FFBD2E"/>
+    <circle cx="284" cy="127" r="6" fill="#27C93F"/>
+    
+    <text x="800" y="132" font-family="'JetBrains Mono', monospace" font-size="13" fill="#8A8A8E" text-anchor="middle" letter-spacing="0.1em">BANK CORE TRANSACTION SYSTEM • C++ OOP &amp; STREAMS</text>
+    <rect x="1300" y="116" width="76" height="22" rx="4" fill="rgba(198,255,61,0.1)"/>
+    <text x="1338" y="131" font-family="'JetBrains Mono', monospace" font-size="10" fill="#C6FF3D" font-weight="600" text-anchor="middle">ACID READY</text>
+
+    <!-- Content Area: Top metrics, middle ledger table, bottom transaction inspector -->
+    <g transform="translate(240, 190)">
+      <!-- 3 Metrics Cards -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="350" height="100" rx="10" fill="#121217" stroke="rgba(255,255,255,0.08)"/>
+        <text x="24" y="32" font-family="'JetBrains Mono', monospace" font-size="11" fill="#8A8A8E">TOTAL VAULT ASSETS</text>
+        <text x="24" y="70" font-family="'Space Grotesk', sans-serif" font-size="28" font-weight="700" fill="#EDEDED">$1,482,900.50</text>
+      </g>
+      <g transform="translate(385, 0)">
+        <rect x="0" y="0" width="350" height="100" rx="10" fill="#121217" stroke="rgba(198,255,61,0.2)"/>
+        <text x="24" y="32" font-family="'JetBrains Mono', monospace" font-size="11" fill="#8A8A8E">PERSISTENT LEDGER NODES</text>
+        <text x="24" y="70" font-family="'Space Grotesk', sans-serif" font-size="28" font-weight="700" fill="#C6FF3D">1,248 ACTIVE ACCOUNTS</text>
+      </g>
+      <g transform="translate(770, 0)">
+        <rect x="0" y="0" width="350" height="100" rx="10" fill="#121217" stroke="rgba(255,255,255,0.08)"/>
+        <text x="24" y="32" font-family="'JetBrains Mono', monospace" font-size="11" fill="#8A8A8E">STREAM INTEGRITY</text>
+        <text x="24" y="70" font-family="'Space Grotesk', sans-serif" font-size="28" font-weight="700" fill="#EDEDED">100% UNCORRUPTED</text>
+      </g>
+
+      <!-- Ledger Table -->
+      <g transform="translate(0, 130)">
+        <rect x="0" y="0" width="1120" height="380" rx="10" fill="#111116" stroke="rgba(255,255,255,0.08)"/>
+        
+        <!-- Table Header -->
+        <rect x="0" y="0" width="1120" height="46" rx="10" fill="#16161D"/>
+        <line x1="0" y1="46" x2="1120" y2="46" stroke="rgba(255,255,255,0.08)"/>
+        <text x="32" y="29" font-family="'JetBrains Mono', monospace" font-size="12" fill="#8A8A8E">TX_ID</text>
+        <text x="180" y="29" font-family="'JetBrains Mono', monospace" font-size="12" fill="#8A8A8E">ACCOUNT HOLDER</text>
+        <text x="440" y="29" font-family="'JetBrains Mono', monospace" font-size="12" fill="#8A8A8E">ACCOUNT TYPE</text>
+        <text x="680" y="29" font-family="'JetBrains Mono', monospace" font-size="12" fill="#8A8A8E">BALANCE</text>
+        <text x="920" y="29" font-family="'JetBrains Mono', monospace" font-size="12" fill="#8A8A8E">STATUS</text>
+
+        <!-- Rows -->
+        <g transform="translate(32, 80)">
+          <text x="0" y="0" font-family="'JetBrains Mono', monospace" font-size="13" fill="#C6FF3D">#TX-94810</text>
+          <text x="148" y="0" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED">Alexander Wright</text>
+          <text x="408" y="0" font-family="'JetBrains Mono', monospace" font-size="13" fill="#8A8A8E">Premium Savings</text>
+          <text x="648" y="0" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED">$84,250.00</text>
+          <rect x="888" y="-14" width="70" height="22" rx="4" fill="rgba(198,255,61,0.1)"/>
+          <text x="923" y="1" font-family="'JetBrains Mono', monospace" font-size="10" fill="#C6FF3D" font-weight="600" text-anchor="middle">VERIFIED</text>
+        </g>
+        <line x1="20" y1="102" x2="1100" y2="102" stroke="rgba(255,255,255,0.04)"/>
+
+        <g transform="translate(32, 136)">
+          <text x="0" y="0" font-family="'JetBrains Mono', monospace" font-size="13" fill="#C6FF3D">#TX-94811</text>
+          <text x="148" y="0" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED">Elena Rostova</text>
+          <text x="408" y="0" font-family="'JetBrains Mono', monospace" font-size="13" fill="#8A8A8E">Commercial Checking</text>
+          <text x="648" y="0" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED">$319,400.12</text>
+          <rect x="888" y="-14" width="70" height="22" rx="4" fill="rgba(198,255,61,0.1)"/>
+          <text x="923" y="1" font-family="'JetBrains Mono', monospace" font-size="10" fill="#C6FF3D" font-weight="600" text-anchor="middle">VERIFIED</text>
+        </g>
+        <line x1="20" y1="158" x2="1100" y2="158" stroke="rgba(255,255,255,0.04)"/>
+
+        <g transform="translate(32, 192)">
+          <text x="0" y="0" font-family="'JetBrains Mono', monospace" font-size="13" fill="#C6FF3D">#TX-94812</text>
+          <text x="148" y="0" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED">Tariq Mansoor</text>
+          <text x="408" y="0" font-family="'JetBrains Mono', monospace" font-size="13" fill="#8A8A8E">Corporate Escrow</text>
+          <text x="648" y="0" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED">$1,020,000.00</text>
+          <rect x="888" y="-14" width="70" height="22" rx="4" fill="rgba(198,255,61,0.1)"/>
+          <text x="923" y="1" font-family="'JetBrains Mono', monospace" font-size="10" fill="#C6FF3D" font-weight="600" text-anchor="middle">VERIFIED</text>
+        </g>
+        <line x1="20" y1="214" x2="1100" y2="214" stroke="rgba(255,255,255,0.04)"/>
+
+        <g transform="translate(32, 248)">
+          <text x="0" y="0" font-family="'JetBrains Mono', monospace" font-size="13" fill="#C6FF3D">#TX-94813</text>
+          <text x="148" y="0" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED">Sophia Chen</text>
+          <text x="408" y="0" font-family="'JetBrains Mono', monospace" font-size="13" fill="#8A8A8E">Standard Checking</text>
+          <text x="648" y="0" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED">$59,250.38</text>
+          <rect x="888" y="-14" width="70" height="22" rx="4" fill="rgba(198,255,61,0.1)"/>
+          <text x="923" y="1" font-family="'JetBrains Mono', monospace" font-size="10" fill="#C6FF3D" font-weight="600" text-anchor="middle">VERIFIED</text>
+        </g>
+      </g>
+
+      <!-- Bottom Console Prompt -->
+      <g transform="translate(0, 530)">
+        <rect x="0" y="0" width="1120" height="52" rx="8" fill="#131318" stroke="rgba(255,255,255,0.08)"/>
+        <text x="24" y="32" font-family="'JetBrains Mono', monospace" font-size="13" fill="#C6FF3D">[IO_STREAM] Persistent ledger bin sync OK &gt; flush() executed across 4 records.</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Editorial Badge Watermark -->
+  <text x="80" y="950" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#8A8A8E" letter-spacing="0.1em">03 / CASE STUDY</text>
+  <text x="1520" y="950" font-family="'JetBrains Mono', monospace" font-size="14" fill="#C6FF3D" text-anchor="end">C++ • OOP • BINARY DATA STREAMS</text>
+</svg>
+

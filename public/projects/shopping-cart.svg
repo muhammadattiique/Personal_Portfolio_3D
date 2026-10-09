@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="100%" height="100%">
+  <defs>
+    <radialGradient id="shopGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#C6FF3D" stop-opacity="0.1"/>
+      <stop offset="60%" stop-color="#141419" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0A0A0C" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="cardGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#171720"/>
+      <stop offset="100%" stop-color="#0E0E13"/>
+    </linearGradient>
+    <filter id="shadowFilter4" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#000000" flood-opacity="0.75"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="1000" fill="#0A0A0C"/>
+  <rect width="1600" height="1000" fill="url(#shopGlow)"/>
+
+  <!-- Subtle Grid Pattern -->
+  <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
+    <line x1="200" y1="0" x2="200" y2="1000"/>
+    <line x1="600" y1="0" x2="600" y2="1000"/>
+    <line x1="1000" y1="0" x2="1000" y2="1000"/>
+    <line x1="1400" y1="0" x2="1400" y2="1000"/>
+  </g>
+
+  <!-- Browser Window Mockup -->
+  <g filter="url(#shadowFilter4)">
+    <rect x="200" y="100" width="1200" height="800" rx="16" fill="url(#cardGrad4)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    
+    <!-- Titlebar -->
+    <rect x="200" y="100" width="1200" height="54" rx="16" fill="#121216"/>
+    <rect x="200" y="138" width="1200" height="16" fill="#121216"/>
+    <line x1="200" y1="154" x2="1400" y2="154" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    
+    <circle cx="240" cy="127" r="6" fill="#FF5F56"/>
+    <circle cx="262" cy="127" r="6" fill="#FFBD2E"/>
+    <circle cx="284" cy="127" r="6" fill="#27C93F"/>
+    
+    <text x="800" y="132" font-family="'JetBrains Mono', monospace" font-size="13" fill="#8A8A8E" text-anchor="middle" letter-spacing="0.1em">MONOCHROME E-COMMERCE CART • JAVASCRIPT DOM ARCHITECTURE</text>
+    <rect x="1300" y="116" width="76" height="22" rx="4" fill="rgba(198,255,61,0.1)"/>
+    <text x="1338" y="131" font-family="'JetBrains Mono', monospace" font-size="10" fill="#C6FF3D" font-weight="600" text-anchor="middle">ACTIVE DOM</text>
+
+    <!-- App Content Area -->
+    <g transform="translate(240, 185)">
+      <!-- Store Header -->
+      <text x="0" y="32" font-family="'Space Grotesk', sans-serif" font-size="28" font-weight="700" fill="#EDEDED">ATTIQUE STUDIO / SHOP</text>
+      <text x="0" y="58" font-family="'JetBrains Mono', monospace" font-size="12" fill="#8A8A8E">CLIENT-SIDE STATE ENGINE • INSTANT RECOMPUTATION</text>
+      
+      <!-- Cart summary icon in header -->
+      <g transform="translate(1000, 10)">
+        <rect x="0" y="0" width="120" height="42" rx="21" fill="#1A1A22" stroke="rgba(255,255,255,0.1)"/>
+        <text x="44" y="26" font-family="'Space Grotesk', sans-serif" font-size="13" font-weight="600" fill="#EDEDED">BAG [3]</text>
+        <circle cx="24" cy="21" r="5" fill="#C6FF3D"/>
+      </g>
+      
+      <!-- Split: 2 Product Cards on Left, Order Summary on Right -->
+      <!-- Left: Products -->
+      <g transform="translate(0, 95)">
+        <!-- Product 1 -->
+        <rect x="0" y="0" width="680" height="180" rx="12" fill="#121217" stroke="rgba(255,255,255,0.08)"/>
+        <rect x="24" y="24" width="132" height="132" rx="8" fill="#1A1A22"/>
+        <circle cx="90" cy="90" r="36" fill="rgba(198,255,61,0.15)" stroke="#C6FF3D" stroke-width="1"/>
+        <text x="90" y="96" font-family="'Space Grotesk', sans-serif" font-size="13" font-weight="700" fill="#C6FF3D" text-anchor="middle">AUDIO</text>
+        
+        <text x="180" y="58" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#EDEDED">Precision Studio Monitors</text>
+        <text x="180" y="86" font-family="'JetBrains Mono', monospace" font-size="12" fill="#8A8A8E">SKU: MON-409 • In Stock</text>
+        <text x="180" y="136" font-family="'Space Grotesk', sans-serif" font-size="22" font-weight="700" fill="#C6FF3D">$249.00</text>
+        
+        <!-- Quantity control -->
+        <g transform="translate(520, 110)">
+          <rect x="0" y="0" width="130" height="36" rx="6" fill="#1A1A24" stroke="rgba(255,255,255,0.08)"/>
+          <text x="24" y="23" font-family="'JetBrains Mono', monospace" font-size="16" fill="#8A8A8E" text-anchor="middle">−</text>
+          <text x="65" y="23" font-family="'JetBrains Mono', monospace" font-size="14" fill="#EDEDED" font-weight="600" text-anchor="middle">1</text>
+          <text x="106" y="23" font-family="'JetBrains Mono', monospace" font-size="16" fill="#8A8A8E" text-anchor="middle">+</text>
+        </g>
+
+        <!-- Product 2 -->
+        <g transform="translate(0, 204)">
+          <rect x="0" y="0" width="680" height="180" rx="12" fill="#121217" stroke="rgba(255,255,255,0.08)"/>
+          <rect x="24" y="24" width="132" height="132" rx="8" fill="#1A1A22"/>
+          <circle cx="90" cy="90" r="36" fill="rgba(198,255,61,0.15)" stroke="#C6FF3D" stroke-width="1"/>
+          <text x="90" y="96" font-family="'Space Grotesk', sans-serif" font-size="13" font-weight="700" fill="#C6FF3D" text-anchor="middle">DESK</text>
+          
+          <text x="180" y="58" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="700" fill="#EDEDED">Anodized Mechanical Keypad</text>
+          <text x="180" y="86" font-family="'JetBrains Mono', monospace" font-size="12" fill="#8A8A8E">SKU: KEY-882 • Custom Switches</text>
+          <text x="180" y="136" font-family="'Space Grotesk', sans-serif" font-size="22" font-weight="700" fill="#C6FF3D">$149.00</text>
+          
+          <g transform="translate(520, 110)">
+            <rect x="0" y="0" width="130" height="36" rx="6" fill="#1A1A24" stroke="rgba(255,255,255,0.08)"/>
+            <text x="24" y="23" font-family="'JetBrains Mono', monospace" font-size="16" fill="#8A8A8E" text-anchor="middle">−</text>
+            <text x="65" y="23" font-family="'JetBrains Mono', monospace" font-size="14" fill="#EDEDED" font-weight="600" text-anchor="middle">2</text>
+            <text x="106" y="23" font-family="'JetBrains Mono', monospace" font-size="16" fill="#8A8A8E" text-anchor="middle">+</text>
+          </g>
+        </g>
+      </g>
+
+      <!-- Right: Order Summary Panel -->
+      <g transform="translate(720, 95)">
+        <rect x="0" y="0" width="400" height="384" rx="12" fill="#131319" stroke="rgba(198,255,61,0.2)" stroke-width="1"/>
+        <text x="32" y="44" font-family="'Space Grotesk', sans-serif" font-size="18" font-weight="700" fill="#EDEDED">ORDER LEDGER</text>
+        <line x1="32" y1="64" x2="368" y2="64" stroke="rgba(255,255,255,0.08)"/>
+        
+        <text x="32" y="104" font-family="'JetBrains Mono', monospace" font-size="13" fill="#8A8A8E">Items Subtotal</text>
+        <text x="368" y="104" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED" text-anchor="end">$547.00</text>
+        
+        <text x="32" y="142" font-family="'JetBrains Mono', monospace" font-size="13" fill="#8A8A8E">Estimated Shipping</text>
+        <text x="368" y="142" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#C6FF3D" text-anchor="end">COMPLIMENTARY</text>
+
+        <text x="32" y="180" font-family="'JetBrains Mono', monospace" font-size="13" fill="#8A8A8E">Tax (VAT 0%)</text>
+        <text x="368" y="180" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="600" fill="#EDEDED" text-anchor="end">$0.00</text>
+
+        <line x1="32" y1="210" x2="368" y2="210" stroke="rgba(255,255,255,0.08)"/>
+        
+        <text x="32" y="254" font-family="'Space Grotesk', sans-serif" font-size="16" font-weight="700" fill="#8A8A8E">TOTAL BILLED</text>
+        <text x="368" y="254" font-family="'Space Grotesk', sans-serif" font-size="28" font-weight="700" fill="#C6FF3D" text-anchor="end">$547.00</text>
+        
+        <!-- Checkout Button -->
+        <rect x="32" y="296" width="336" height="52" rx="8" fill="#C6FF3D"/>
+        <text x="200" y="328" font-family="'Space Grotesk', sans-serif" font-size="15" font-weight="700" fill="#0A0A0C" text-anchor="middle">PROCEED TO CHECKOUT →</text>
+      </g>
+
+      <!-- Bottom Status Bar -->
+      <g transform="translate(0, 510)">
+        <rect x="0" y="0" width="1120" height="42" rx="6" fill="#111115" stroke="rgba(255,255,255,0.06)"/>
+        <text x="20" y="26" font-family="'JetBrains Mono', monospace" font-size="12" fill="#8A8A8E">[STATE ENGINE] LocalStorage sync dispatched • 3 items active • 0 network overhead</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Editorial Badge Watermark -->
+  <text x="80" y="950" font-family="'Space Grotesk', sans-serif" font-size="16" fill="#8A8A8E" letter-spacing="0.1em">04 / CASE STUDY</text>
+  <text x="1520" y="950" font-family="'JetBrains Mono', monospace" font-size="14" fill="#C6FF3D" text-anchor="end">JAVASCRIPT ES6+ • DOM STATE • ZERO FRAMEWORK</text>
+</svg>
+

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#060507"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#mesh)"/>
+  <defs>
+    <radialGradient id="mesh" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7c5cff" stop-opacity="0.15"/>
+      <stop offset="50%" stop-color="#22d3ee" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#060507" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <text x="600" y="280" font-family="Space Grotesk, sans-serif" font-size="64" font-weight="700" fill="#ffffff" text-anchor="middle">Muhammad Attique</text>
+  <text x="600" y="350" font-family="Space Grotesk, sans-serif" font-size="28" fill="#7c5cff" text-anchor="middle">Full Stack Developer</text>
+  <text x="600" y="400" font-family="JetBrains Mono, monospace" font-size="16" fill="#7a7a8a" text-anchor="middle">React • Next.js • Java Spring Boot • Docker • Kubernetes</text>
+  <rect x="550" y="460" width="100" height="4" rx="2" fill="#7c5cff"/>
+</svg>
