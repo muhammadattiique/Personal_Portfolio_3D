@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { CustomCursor } from './components/ui/CustomCursor';
+import { CommandPalette } from './components/ui/CommandPalette';
 import { useReducedMotion } from './hooks';
 
 // Code-split pages for high Lighthouse performance
@@ -100,6 +101,9 @@ export default function App() {
 
       {/* Editorial Footer */}
       <Footer />
+
+      {/* Command Palette (Cmd+K) */}
+      <CommandPalette />
     </div>
   );
 }

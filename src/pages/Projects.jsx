@@ -7,6 +7,7 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { ProjectCard } from '../components/ui/ProjectCard';
 import { Reveal } from '../components/ui/Reveal';
 import { profile } from '../data/profile';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Projects() {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -56,9 +57,11 @@ export default function Projects() {
           {/* Category Filter Pills */}
           <div className="flex flex-wrap items-center gap-2 mb-12">
             {categories.map((category) => (
-              <button
+              <motion.button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 className={`font-mono text-xs uppercase tracking-wider px-4 py-2 rounded-full border transition-all duration-200 ${
                   selectedCategory === category
                     ? 'bg-accent text-background border-accent font-semibold shadow-[0_0_15px_rgba(198,255,61,0.25)]'
@@ -66,18 +69,27 @@ export default function Projects() {
                 }`}
               >
                 {category}
-              </button>
+              </motion.button>
             ))}
           </div>
 
           {/* Projects Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
-            {filteredProjects.map((project, idx) => (
-              <Reveal key={project.id} delay={idx * 0.1}>
-                <ProjectCard project={project} />
-              </Reveal>
-            ))}
-          </div>
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key={selectedCategory}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+            >
+              {filteredProjects.map((project, idx) => (
+                <Reveal key={project.id} delay={idx * 0.08}>
+                  <ProjectCard project={project} />
+                </Reveal>
+              ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </main>
     </>

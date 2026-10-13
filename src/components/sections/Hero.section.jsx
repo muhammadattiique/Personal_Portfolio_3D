@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Download } from 'lucide-react';
 import { profile } from '../../data/profile';
 import { Button } from '../ui/Button';
 import { MagneticButton } from '../ui/MagneticButton';
@@ -81,8 +81,20 @@ export function Hero() {
 
                 <MagneticButton strength={0.3}>
                   <Button
-                    href={`mailto:${profile.email}`}
+                    href={profile.resumeUrl}
+                    download
                     variant="outline"
+                    size="lg"
+                    icon={<Download size={18} />}
+                  >
+                    Download Resume
+                  </Button>
+                </MagneticButton>
+
+                <MagneticButton strength={0.3}>
+                  <Button
+                    href={`mailto:${profile.email}`}
+                    variant="ghost"
                     size="lg"
                     icon={<ArrowUpRight size={18} />}
                   >

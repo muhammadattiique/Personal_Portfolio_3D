@@ -37,9 +37,9 @@ export const education = [
   {
     id: "bachelors",
     degree: "Bachelor of Science in Computer Science (BSCS)",
-    institution: "National University / Institute of Technology", // TODO: Update with your exact university name
-    location: "Pakistan",
-    duration: "2022 – 2026",
+    institution: "PMAS Arid Agriculture University Rawalpindi",
+    location: "Rawalpindi, Pakistan",
+    duration: "2023 – Present",
     details: "Core coursework: Data Structures & Algorithms, Object-Oriented Programming, Computer Networks, Operating Systems, Database Systems, Software Engineering.",
   },
 ];

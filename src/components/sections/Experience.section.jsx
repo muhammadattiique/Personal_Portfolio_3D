@@ -2,6 +2,7 @@ import { experiences, education } from '../../data/experience';
 import { SectionHeader } from '../ui/SectionHeader';
 import { Tag } from '../ui/Tag';
 import { Reveal } from '../ui/Reveal';
+import { motion } from 'framer-motion';
 
 export function Experience() {
   return (
@@ -9,8 +10,8 @@ export function Experience() {
       <div className="max-w-editorial mx-auto px-5 md:px-8">
         <SectionHeader
           number="04"
-          label="EXPERIENCE &amp; BACKGROUND"
-          title="Career Journey &amp; Academic Foundation"
+          label="EXPERIENCE & BACKGROUND"
+          title="Career Journey & Academic Foundation"
           subtitle="Real-world engineering roles, sprint responsibilities, and computer science foundations."
         />
 
@@ -22,8 +23,12 @@ export function Experience() {
             </span>
 
             {experiences.map((exp, idx) => (
-              <Reveal key={exp.id} delay={idx * 0.15}>
-                <div className="p-8 rounded-2xl bg-surface border border-border transition-all duration-300 hover:border-border-strong">
+              <Reveal key={exp.id} delay={idx * 0.15} cascade>
+                <motion.div
+                  layout
+                  className="p-8 rounded-2xl bg-surface border border-border transition-all duration-300 hover:border-border-strong hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                >
                   {/* Top Header: Company, Role & Duration */}
                   <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-6 border-b border-border">
                     <div>
@@ -60,23 +65,32 @@ export function Experience() {
 
                     <ul className="space-y-2 mb-6">
                       {exp.highlights.map((item, hIdx) => (
-                        <li key={hIdx} className="flex items-start gap-2.5 text-sm text-muted">
+                        <motion.li
+                          key={hIdx}
+                          layout
+                          className="flex items-start gap-2.5 text-sm text-muted"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: hIdx * 0.08 }}
+                        >
                           <span className="text-accent mt-1 font-mono text-xs">▹</span>
                           <span>{item}</span>
-                        </li>
+                        </motion.li>
                       ))}
                     </ul>
 
                     {/* Tech Badges */}
                     <div className="flex flex-wrap gap-1.5 pt-4 border-t border-border/60">
                       {exp.tags.map((tag) => (
-                        <Tag key={tag} size="sm">
-                          {tag}
-                        </Tag>
+                        <motion.div key={tag} layout>
+                          <Tag size="sm" className="group-hover:scale-105 transition-transform duration-200">
+                            {tag}
+                          </Tag>
+                        </motion.div>
                       ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </Reveal>
             ))}
           </div>
@@ -89,7 +103,11 @@ export function Experience() {
 
             {education.map((edu, idx) => (
               <Reveal key={edu.id} delay={0.2 + idx * 0.1}>
-                <div className="p-8 rounded-2xl bg-surface border border-border">
+                <motion.div
+                  layout
+                  className="p-8 rounded-2xl bg-surface border border-border transition-all duration-300 hover:border-border-strong hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                >
                   <span className="font-mono text-xs text-accent uppercase tracking-wider block mb-2">
                     {edu.duration}
                   </span>
@@ -102,12 +120,16 @@ export function Experience() {
                   <p className="mt-4 text-xs md:text-sm text-muted/80 leading-relaxed pt-4 border-t border-border">
                     {edu.details}
                   </p>
-                </div>
+                </motion.div>
               </Reveal>
             ))}
 
             <Reveal delay={0.35}>
-              <div className="p-8 rounded-2xl bg-surface-elevated border border-border">
+              <motion.div
+                layout
+                className="p-8 rounded-2xl bg-surface-elevated border border-border transition-all duration-300 hover:border-border-strong hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              >
                 <span className="font-mono text-eyebrow text-accent uppercase tracking-wider block mb-2">
                   RESUME / CV
                 </span>
@@ -115,13 +137,13 @@ export function Experience() {
                   Download my full professional curriculum vitae with complete project logs and technical proficiencies.
                 </p>
                 <a
-                  href="/resume.pdf"
+                  href="/MUHAMMAD_ATTIQUE_RESUME.pdf"
                   download
                   className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-foreground hover:text-accent border border-border hover:border-accent px-4 py-2 rounded-full transition-colors"
                 >
                   Download Resume (PDF)
                 </a>
-              </div>
+              </motion.div>
             </Reveal>
           </div>
         </div>

@@ -1,14 +1,46 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Github } from 'lucide-react';
 import { Tag } from './Tag';
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 
 export function ProjectCard({ project, priority = false }) {
   const { slug, number, title, subtitle, year, tags, coverImage, github, category } = project;
 
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const rotateX = useTransform(y, [-100, 0, 100], [10, 0, -10]);
+  const rotateY = useTransform(x, [-100, 0, 100], [-10, 0, 10]);
+
+  const springX = useSpring(x, { stiffness: 400, damping: 30 });
+  const springY = useSpring(y, { stiffness: 400, damping: 30 });
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    x.set((e.clientX - centerX) / (rect.width / 2) * 20);
+    y.set((e.clientY - centerY) / (rect.height / 2) * 20);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   return (
-    <article
+    <motion.article
       data-cursor="view"
+      layout
+      style={{
+        rotateX: springY,
+        rotateY: springX,
+        transformPerspective: 1000,
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="group relative flex flex-col rounded-2xl bg-surface border border-border overflow-hidden transition-all duration-500 hover:border-border-strong hover:shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
+      whileHover={{ y: -8, transition: { duration: 0.3, ease: 'easeOut' } }}
     >
       {/* Clickable Image Container */}
       <Link
@@ -100,6 +132,6 @@ export function ProjectCard({ project, priority = false }) {
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }

@@ -8,6 +8,7 @@ import { Button } from '../ui/Button';
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -21,7 +22,13 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      const scrolled = window.scrollY > 30;
+      setIsScrolled(scrolled);
+      
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+      setScrollProgress(progress);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -49,6 +56,14 @@ export function Navbar() {
 
   return (
     <>
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-0.5 z-50 bg-accent origin-left transform scale-x-0"
+        style={{ transformOrigin: 'left center' }}
+        animate={{ scaleX: scrollProgress }}
+        transition={{ duration: 0.1, ease: 'linear' }}
+      />
+
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled

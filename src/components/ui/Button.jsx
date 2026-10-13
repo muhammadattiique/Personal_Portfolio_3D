@@ -7,6 +7,7 @@ export const Button = forwardRef(function Button(
     children,
     to,
     href,
+    download,
     variant = 'primary',
     size = 'md',
     className = '',
@@ -68,6 +69,7 @@ export const Button = forwardRef(function Button(
       <a
         ref={ref}
         href={href}
+        download={download}
         className={combinedClasses}
         target={isExternal && !href.startsWith('mailto:') ? '_blank' : undefined}
         rel={isExternal && !href.startsWith('mailto:') ? 'noopener noreferrer' : undefined}

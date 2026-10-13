@@ -182,12 +182,6 @@ export function Avatar3D({ className = '', height = '520px' }) {
           </Suspense>
         </Canvas>
       </WebGLErrorBoundary>
-
-      {/* Floating interactive indicator badge */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-surface/80 backdrop-blur-md border border-white/10 font-mono text-[10px] text-muted tracking-widest uppercase pointer-events-none flex items-center gap-1.5 shadow-lg">
-        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
-        <span>INTERACTIVE 3D AVATAR</span>
-      </div>
     </div>
   );
 }

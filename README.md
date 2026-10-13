@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Muhammad Attique — Personal Portfolio
 
 An editorial, minimal, personality-driven dark portfolio built with **React 18**, **Tailwind CSS**, and **Vite**, inspired by the **Logan** Framer design aesthetic. Features fluid clamp typography, numbered editorial sections, high-contrast monochrome palette with an electric lime accent (`#C6FF3D`), Lenis smooth scrolling, and an interactive **3D Avatar** with procedural fallback.
@@ -240,7 +241,7 @@ If you have a custom 3D model (e.g. from Ready Player Me, Blender, or Mixamo):
 
 ## 📬 Contact Form Configuration
 
-The Contact section includes support for **EmailJS** with automatic fallback simulation:
+The Contact section includes support for **EmailJS** with an automatic `mailto:` fallback:
 
 1. Create a free account at [EmailJS](https://www.emailjs.com/).
 2. Create an Email Service (Gmail, Outlook, etc.) and an Email Template.
@@ -250,7 +251,7 @@ The Contact section includes support for **EmailJS** with automatic fallback sim
    VITE_EMAILJS_TEMPLATE_ID=your_emailjs_template_id
    VITE_EMAILJS_PUBLIC_KEY=your_emailjs_public_key
    ```
-4. If left as `your_service_id`, the form simulates a successful transmission so you can preview interaction states without throwing errors.
+4. If left as `your_service_id`, the form opens the user's native mail client with the inquiry pre-filled, so queries still reach you directly without any backend setup.
 
 ---
 

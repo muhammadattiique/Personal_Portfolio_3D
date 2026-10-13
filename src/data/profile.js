@@ -15,12 +15,12 @@ export const profile = {
   city: "Rawalpindi",
   country: "Pakistan",
   timezone: "PKT (UTC+5)",
-  email: "muhammadattiique.dev@gmail.com",
+  email: "muhammadattiquetariq@gmail.com",
   phone: "+92 300 0000000", // TODO: Update with real phone number if desired
-  resumeUrl: "/resume.pdf",
+  resumeUrl: "/MUHAMMAD_ATTIQUE_RESUME.pdf",
   socials: [
     { label: "GitHub", href: "https://github.com/muhammadattiique", username: "@muhammadattiique" },
-    { label: "LinkedIn", href: "https://linkedin.com/in/muhammad-attique", username: "in/muhammad-attique" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/muhammad-attique-45666b363", username: "in/muhammad-attique-45666b363" },
     { label: "X / Twitter", href: "https://x.com/muhammadattiique", username: "@muhammadattiique" },
   ],
   stats: [

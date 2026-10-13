@@ -1,6 +1,7 @@
 import { profile } from '../../data/profile';
 import { SectionHeader } from '../ui/SectionHeader';
 import { Reveal } from '../ui/Reveal';
+import { motion } from 'framer-motion';
 
 export function About() {
   return (
@@ -23,26 +24,37 @@ export function About() {
             ))}
 
             <Reveal delay={0.3}>
-              <div className="p-6 rounded-2xl bg-surface border border-border mt-4">
+              <motion.div
+                layout
+                className="p-6 rounded-2xl bg-surface border border-border mt-4 transition-all duration-300 hover:border-border-strong hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              >
                 <span className="font-mono text-eyebrow text-accent uppercase tracking-wider block mb-2">
                   ENGINEERING PHILOSOPHY
                 </span>
                 <p className="font-display text-xl text-foreground font-medium">
                   "Every millisecond saved in network roundtrips and every frame retained at 60fps directly elevates the human experience."
                 </p>
-              </div>
+              </motion.div>
             </Reveal>
           </div>
 
           {/* Right Column: Key Stats & Location Box */}
           <div className="lg:col-span-5 flex flex-col gap-4">
             {profile.stats.map((stat, idx) => (
-              <Reveal key={stat.label} delay={idx * 0.15}>
-                <div className="p-6 md:p-8 rounded-2xl bg-surface border border-border flex items-baseline justify-between transition-all duration-300 hover:border-border-strong">
+              <Reveal key={stat.label} delay={idx * 0.15} cascade>
+                <motion.div
+                  layout
+                  className="p-6 md:p-8 rounded-2xl bg-surface border border-border flex items-baseline justify-between transition-all duration-300 hover:border-border-strong hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                  whileHover={{ y: -4, scale: 1.01, transition: { duration: 0.2 } }}
+                >
                   <div>
-                    <div className="font-display text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">
+                    <motion.div
+                      className="font-display text-4xl md:text-5xl font-extrabold text-foreground tracking-tight"
+                      whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                    >
                       {stat.value}
-                    </div>
+                    </motion.div>
                     <div className="font-mono text-xs uppercase tracking-widest text-muted mt-2">
                       {stat.label}
                     </div>
@@ -50,7 +62,7 @@ export function About() {
                   <span className="font-mono text-xs text-muted/40">
                     0{idx + 1}
                   </span>
-                </div>
+                </motion.div>
               </Reveal>
             ))}
           </div>
