@@ -1,46 +1,114 @@
-import { Suspense, useState, useEffect, useRef, Component } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Suspense, useState, useEffect, useRef, useMemo, Component } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Float } from '@react-three/drei';
+import * as THREE from 'three';
 import { ProceduralBoy } from './ProceduralBoy';
 import { useReducedMotion } from '../../hooks';
 
+// The avatar is a Ready Player Me (RPM) model loaded AT RUNTIME from the RPM CDN
+// in the end-user's browser, so it requires internet in that browser (it is NOT
+// bundled or downloaded at build time). Replace AVATAR_GLB_URL with your own RPM
+// .glb URL to swap the character. The lip-sync morph-target names below
+// ("mouthOpen", "viseme_aa", etc.) only exist because they are requested via the
+// ?morphTargets= query param — changing that param changes the available targets.
+const AVATAR_GLB_URL =
+  'https://models.readyplayer.me/64bfa15f0e72c63d7c3934a6.glb?morphTargets=mouthOpen,mouthSmile,viseme_aa,viseme_O,viseme_E&textureAtlas=1024&pose=A';
+
 /**
- * Tries to load /models/avatar.glb if present; otherwise lets fallback take over.
+ * Renders the external RPM GLB model, degrading to the procedural boy if the
+ * model cannot load/decode. The GLB is tried first; a load/decode/network
+ * failure is caught by the surrounding ModelErrorBoundary which falls back to
+ * <ProceduralBoy /> (NOT the 2D StaticAvatarFallback — that is reserved for
+ * WebGL being unavailable).
  */
 function ModelOrProceduralAvatar({ mouseHover, speaking }) {
-  const [modelError, setModelError] = useState(false);
-
-  if (modelError) {
-    return <ProceduralBoy mouseHover={mouseHover} speaking={speaking} />;
-  }
-
   return (
     <Suspense fallback={<ProceduralBoy mouseHover={mouseHover} speaking={speaking} />}>
-      <ExternalAvatarModel
-        onError={() => setModelError(true)}
-        mouseHover={mouseHover}
-        speaking={speaking}
-      />
+      <ModelErrorBoundary fallback={<ProceduralBoy mouseHover={mouseHover} speaking={speaking} />}>
+        <ExternalAvatarModel mouseHover={mouseHover} speaking={speaking} />
+      </ModelErrorBoundary>
     </Suspense>
   );
 }
 
-function ExternalAvatarModel({ onError, mouseHover, speaking }) {
-  try {
-    const gltf = useGLTF('/models/avatar.glb', true);
-    if (!gltf || !gltf.scene) {
-      return <ProceduralBoy mouseHover={mouseHover} speaking={speaking} />;
+function ExternalAvatarModel({ mouseHover, speaking }) {
+  // Hook is called unconditionally at the top; load failure (network/CDN/decode)
+  // surfaces as a thrown promise/error during render and is handled by the
+  // surrounding ModelErrorBoundary, not a try/catch here.
+  const gltf = useGLTF(AVATAR_GLB_URL);
+
+  // Collect every mesh that exposes mouth-related morph targets so the lip-sync
+  // can drive all of them. Resolve the mouth morph index in priority order and
+  // guard fully so a model missing these targets never throws.
+  const lipSyncTargets = useMemo(() => {
+    const targets = [];
+    const scene = gltf?.scene;
+    if (!scene) return targets;
+    scene.traverse((child) => {
+      const dict = child?.morphTargetDictionary;
+      const influences = child?.morphTargetInfluences;
+      if (!dict || !influences) return;
+      const index =
+        dict['mouthOpen'] ??
+        dict['viseme_aa'] ??
+        dict['jawOpen'] ??
+        dict['mouthSmile'];
+      if (Number.isInteger(index) && index >= 0 && index < influences.length) {
+        targets.push({ mesh: child, index });
+      }
+    });
+    return targets;
+  }, [gltf?.scene]);
+
+  useFrame((state) => {
+    if (!lipSyncTargets.length) return;
+    const t = state.clock.elapsedTime;
+    for (const { mesh, index } of lipSyncTargets) {
+      const influences = mesh?.morphTargetInfluences;
+      if (!influences || !Number.isInteger(index) || index >= influences.length) continue;
+      if (speaking) {
+        const target = Math.min(
+          1,
+          Math.abs(Math.sin(t * 10)) * (0.4 + Math.random() * 0.4)
+        );
+        influences[index] = target;
+      } else {
+        // Ease the mouth shut when not speaking.
+        influences[index] = THREE.MathUtils.lerp(influences[index] || 0, 0, 0.3);
+      }
     }
-    return (
-      <primitive
-        object={gltf.scene}
-        position={[0, -1.2, 0]}
-        scale={[1.2, 1.2, 1.2]}
-      />
-    );
-  } catch {
-    onError();
+  });
+
+  if (!gltf || !gltf.scene) {
     return <ProceduralBoy mouseHover={mouseHover} speaking={speaking} />;
+  }
+
+  // Framed for head-and-shoulders in the square panel under the existing
+  // camera (position [0,0,4.2], fov 42).
+  return <primitive object={gltf.scene} position={[0, -1.5, 0]} scale={1.45} />;
+}
+
+/**
+ * Dedicated error boundary for the external GLB model. On any model
+ * load/decode error it renders its fallback (the 3D ProceduralBoy). This is
+ * intentionally separate from WebGLErrorBoundary so a model failure degrades to
+ * the procedural 3D boy rather than the 2D badge.
+ */
+class ModelErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
   }
 }
 
@@ -187,9 +255,11 @@ export function Avatar3D({ className = '', height = '520px', speaking = false })
   );
 }
 
-// Preload avatar model if it exists
+// Preload the RPM avatar model. Loaded at runtime from the Ready Player Me CDN
+// (requires internet in the end-user browser); guarded so a missing/unreachable
+// model never breaks module evaluation.
 try {
-  useGLTF.preload('/models/avatar.glb');
+  useGLTF.preload(AVATAR_GLB_URL);
 } catch {
-  // Ignored if missing
+  // Ignored if the preload cannot start (e.g. offline).
 }

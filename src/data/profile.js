@@ -10,10 +10,12 @@ export const profile = {
     "I am a Computer Science undergraduate and software engineer with hands-on full-stack and backend experience. I enjoy building responsive React interfaces alongside dependable server-side systems, from microservices and event-driven pipelines to real-time socket applications.",
     "During a software engineering internship I worked across backend services, DevOps, and CI/CD, while continuing to strengthen my foundations in object-oriented programming, data structures and algorithms, and computer networks. I care about turning complex systems into clean, reliable products."
   ],
-  // NOTE: "Atteeky" is an intentional phonetic respelling of the surname "Attique"
-  // so that en-US text-to-speech pronounces it like "ah-TEE-kee" (Attiqui) instead of
-  // "Atteek/Attick". This only affects the SPOKEN text, never the displayed name.
-  voiceIntro: "Hi, I am Muhammad Atteeky, a Full-Stack Developer and Software Engineer from Pakistan. I build high-performance web applications with React and Tailwind, scalable backend services with Java, Spring Boot, and Kafka, and interactive three-D experiences on the web. I love turning complex systems into clean, reliable products. Welcome to my portfolio — take a look at my work.",
+  // NOTE: "Atteek" is an intentional phonetic respelling of the surname "Attique"
+  // so that en-US text-to-speech pronounces it as "ah-TEEK" — two syllables,
+  // stress on the second, with a hard "k" ending — rather than a three-syllable
+  // "ah-TEE-kee" or a clipped "Attick". This only affects the SPOKEN text, never
+  // the displayed name (which stays "Muhammad Attique").
+  voiceIntro: "Hi, I am Muhammad Atteek, a Full-Stack Developer and Software Engineer from Pakistan. I build high-performance web applications with React and Tailwind, scalable backend services with Java, Spring Boot, and Kafka, and interactive three-D experiences on the web. I love turning complex systems into clean, reliable products. Welcome to my portfolio — take a look at my work.",
   status: "Available for work",
   location: "Rawalpindi, Pakistan",
   city: "Rawalpindi",

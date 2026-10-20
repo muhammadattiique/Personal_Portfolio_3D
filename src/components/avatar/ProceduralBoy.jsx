@@ -5,7 +5,7 @@ import * as THREE from 'three';
 /**
  * Stylized procedural clay 3D boy representation of Muhammad Attique:
  * - Warm skin tone, styled dark hair, glasses, LIGHT trimmed stubble beard
- * - Dark charcoal hoodie with subtle accent drawstrings
+ * - Business-casual navy/indigo blazer over a lighter collared shirt
  * - Smooth head & eye mouse tracking, breathing float, blinking, greeting wave
  * - Talking mouth that lip-syncs while `speaking` is true (jaw/mouth oscillation)
  */
@@ -179,10 +179,18 @@ export function ProceduralBoy({ mouseHover = false, speaking = false }) {
     metalness: 0.8,
   });
 
+  // Business-casual blazer: muted navy/indigo torso tone.
   const hoodieMaterial = new THREE.MeshStandardMaterial({
-    color: '#15151A',
-    roughness: 0.75,
+    color: '#2A3356',
+    roughness: 0.7,
     metalness: 0.1,
+  });
+
+  // Lighter collared-shirt tone peeking at the neck/chest under the blazer.
+  const shirtMaterial = new THREE.MeshStandardMaterial({
+    color: '#C9D2E3',
+    roughness: 0.6,
+    metalness: 0.05,
   });
 
   const accentMaterial = new THREE.MeshStandardMaterial({
@@ -217,7 +225,17 @@ export function ProceduralBoy({ mouseHover = false, speaking = false }) {
           <capsuleGeometry args={[0.3, 0.65, 8, 16]} />
         </mesh>
 
-        {/* Hoodie Neck Cowl */}
+        {/* Collared shirt showing at the neckline under the blazer */}
+        <mesh position={[0, 0.42, 0.18]} material={shirtMaterial}>
+          <sphereGeometry args={[0.2, 20, 20]} />
+        </mesh>
+
+        {/* Shirt V showing down the center of the chest */}
+        <mesh position={[0, 0.12, 0.3]} rotation={[0, 0, Math.PI / 4]} material={shirtMaterial}>
+          <boxGeometry args={[0.14, 0.14, 0.04]} />
+        </mesh>
+
+        {/* Blazer Neck Cowl */}
         <mesh position={[0, 0.48, 0]} rotation={[Math.PI / 2, 0, 0]} material={hoodieMaterial}>
           <torusGeometry args={[0.32, 0.12, 16, 32]} />
         </mesh>

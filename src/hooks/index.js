@@ -83,10 +83,23 @@ export function useSpeech() {
     const pickVoice = () => {
       const voices = window.speechSynthesis.getVoices();
       if (!voices || voices.length === 0) return;
+
+      const isEn = (v) => v.lang && v.lang.toLowerCase().startsWith('en');
+      const nameIncludes = (v, s) =>
+        v.name && v.name.toLowerCase().includes(s.toLowerCase());
+
+      // Preference order (first match wins), tuned for natural-sounding
+      // en-US/en-GB voices across platforms rather than the robotic default.
+      const namedVoices = ['aria', 'jenny', 'guy', 'zira', 'david'];
       voiceRef.current =
-        voices.find((v) => v.lang && v.lang.startsWith('en-US')) ||
-        voices.find((v) => v.lang && v.lang.startsWith('en-GB')) ||
-        voices.find((v) => v.lang && v.lang.startsWith('en')) ||
+        voices.find((v) => nameIncludes(v, 'natural') && isEn(v)) ||
+        voices.find((v) => nameIncludes(v, 'google') && isEn(v)) ||
+        voices.find(
+          (v) => isEn(v) && namedVoices.some((n) => nameIncludes(v, n))
+        ) ||
+        voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('en-us')) ||
+        voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('en-gb')) ||
+        voices.find((v) => isEn(v)) ||
         null;
     };
 
