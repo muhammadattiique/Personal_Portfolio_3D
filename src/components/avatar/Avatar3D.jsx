@@ -7,28 +7,29 @@ import { useReducedMotion } from '../../hooks';
 /**
  * Tries to load /models/avatar.glb if present; otherwise lets fallback take over.
  */
-function ModelOrProceduralAvatar({ mouseHover }) {
+function ModelOrProceduralAvatar({ mouseHover, speaking }) {
   const [modelError, setModelError] = useState(false);
 
   if (modelError) {
-    return <ProceduralBoy mouseHover={mouseHover} />;
+    return <ProceduralBoy mouseHover={mouseHover} speaking={speaking} />;
   }
 
   return (
-    <Suspense fallback={<ProceduralBoy mouseHover={mouseHover} />}>
+    <Suspense fallback={<ProceduralBoy mouseHover={mouseHover} speaking={speaking} />}>
       <ExternalAvatarModel
         onError={() => setModelError(true)}
         mouseHover={mouseHover}
+        speaking={speaking}
       />
     </Suspense>
   );
 }
 
-function ExternalAvatarModel({ onError, mouseHover }) {
+function ExternalAvatarModel({ onError, mouseHover, speaking }) {
   try {
     const gltf = useGLTF('/models/avatar.glb', true);
     if (!gltf || !gltf.scene) {
-      return <ProceduralBoy mouseHover={mouseHover} />;
+      return <ProceduralBoy mouseHover={mouseHover} speaking={speaking} />;
     }
     return (
       <primitive
@@ -39,7 +40,7 @@ function ExternalAvatarModel({ onError, mouseHover }) {
     );
   } catch {
     onError();
-    return <ProceduralBoy mouseHover={mouseHover} />;
+    return <ProceduralBoy mouseHover={mouseHover} speaking={speaking} />;
   }
 }
 
@@ -79,7 +80,7 @@ function StaticAvatarFallback() {
   );
 }
 
-export function Avatar3D({ className = '', height = '520px' }) {
+export function Avatar3D({ className = '', height = '520px', speaking = false }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [webGLSupported, setWebGLSupported] = useState(true);
@@ -168,7 +169,7 @@ export function Avatar3D({ className = '', height = '520px' }) {
           {/* Character Suspense Wrapper */}
           <Suspense fallback={null}>
             {reducedMotion ? (
-              <ModelOrProceduralAvatar mouseHover={isHovered} />
+              <ModelOrProceduralAvatar mouseHover={isHovered} speaking={speaking} />
             ) : (
               <Float
                 speed={1.6}
@@ -176,7 +177,7 @@ export function Avatar3D({ className = '', height = '520px' }) {
                 floatIntensity={0.3}
                 floatingRange={[-0.05, 0.05]}
               >
-                <ModelOrProceduralAvatar mouseHover={isHovered} />
+                <ModelOrProceduralAvatar mouseHover={isHovered} speaking={speaking} />
               </Float>
             )}
           </Suspense>

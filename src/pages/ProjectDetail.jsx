@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Github, ExternalLink } from 'lucide-react';
-import { getProjectBySlug, getAdjacentProjects } from '../data/projects';
+import { projects, getProjectBySlug, getAdjacentProjects } from '../data/projects';
 import { profile } from '../data/profile';
 import { Button } from '../components/ui/Button';
 import { Tag } from '../components/ui/Tag';
@@ -58,7 +58,7 @@ export default function ProjectDetail() {
             </Link>
 
             <span className="font-mono text-xs text-muted/60">
-              {project.number} / 06
+              {project.number} / {String(projects.length).padStart(2, '0')}
             </span>
           </div>
 

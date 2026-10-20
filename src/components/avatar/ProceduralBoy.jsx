@@ -4,11 +4,12 @@ import * as THREE from 'three';
 
 /**
  * Stylized procedural clay 3D boy representation of Muhammad Attique:
- * - Warm skin tone, styled dark hair, glasses, neat trim beard
+ * - Warm skin tone, styled dark hair, glasses, LIGHT trimmed stubble beard
  * - Dark charcoal hoodie with subtle accent drawstrings
- * - Smooth head & eye mouse tracking, breathing float, blinking, and greeting wave
+ * - Smooth head & eye mouse tracking, breathing float, blinking, greeting wave
+ * - Talking mouth that lip-syncs while `speaking` is true (jaw/mouth oscillation)
  */
-export function ProceduralBoy({ mouseHover = false }) {
+export function ProceduralBoy({ mouseHover = false, speaking = false }) {
   const groupRef = useRef();
   const headRef = useRef();
   const eyesGroupRef = useRef();
@@ -16,6 +17,7 @@ export function ProceduralBoy({ mouseHover = false }) {
   const rightEyelidRef = useRef();
   const rightArmRef = useRef();
   const hoodieRef = useRef();
+  const mouthRef = useRef();
 
   const [hasWaved, setHasWaved] = useState(false);
 
@@ -119,6 +121,20 @@ export function ProceduralBoy({ mouseHover = false }) {
         );
       }
     }
+
+    // 5. Talking mouth lip-sync. While speaking, oscillate the mouth open/close
+    //    with a touch of randomness so it reads as natural speech; otherwise it
+    //    settles nearly closed. Driven by the shared `speaking` flag from useSpeech.
+    if (mouthRef.current) {
+      const targetScaleY = speaking
+        ? 0.35 + Math.abs(Math.sin(time * 9)) * 1.7 + Math.random() * 0.15
+        : 0.3;
+      mouthRef.current.scale.y = THREE.MathUtils.lerp(
+        mouthRef.current.scale.y,
+        targetScaleY,
+        delta * 18
+      );
+    }
   });
 
   // Materials & Colors
@@ -134,10 +150,27 @@ export function ProceduralBoy({ mouseHover = false }) {
     metalness: 0.05,
   });
 
+  // Light, short trimmed-stubble beard: soft light-brown reading against the
+  // warm skin (#D89E7C), high roughness and no emissive so it looks like light
+  // stubble rather than a thick dark beard.
   const beardMaterial = new THREE.MeshStandardMaterial({
-    color: '#26222A',
+    color: '#8A6B55',
+    roughness: 0.95,
+    metalness: 0.0,
+  });
+
+  // Separate darker material for the eyebrows so they stay defined.
+  const browMaterial = new THREE.MeshStandardMaterial({
+    color: '#3A2E28',
     roughness: 0.9,
     metalness: 0.02,
+  });
+
+  // Mouth: a muted dark-plum tone that reads as lips/open mouth on the lower face.
+  const mouthMaterial = new THREE.MeshStandardMaterial({
+    color: '#7A3B3B',
+    roughness: 0.55,
+    metalness: 0.0,
   });
 
   const glassesMaterial = new THREE.MeshStandardMaterial({
@@ -255,12 +288,20 @@ export function ProceduralBoy({ mouseHover = false }) {
           <sphereGeometry args={[0.12, 16, 16]} />
         </mesh>
 
-        {/* Trim Beard / Goatee / Stubble */}
-        <mesh position={[0, -0.22, 0.22]} material={beardMaterial}>
-          <boxGeometry args={[0.38, 0.18, 0.32]} />
+        {/* Light trimmed stubble beard — reduced coverage and volume so it
+            reads as a short light beard, not a thick dark one. */}
+        <mesh position={[0, -0.24, 0.24]} material={beardMaterial}>
+          <boxGeometry args={[0.32, 0.12, 0.26]} />
         </mesh>
-        <mesh position={[0, -0.36, 0.2]} material={beardMaterial}>
-          <sphereGeometry args={[0.18, 16, 16]} />
+        <mesh position={[0, -0.34, 0.22]} material={beardMaterial}>
+          <sphereGeometry args={[0.13, 16, 16]} />
+        </mesh>
+
+        {/* Mouth (sits on the lower face, below the nose; scales on Y to
+            open/close while speaking). A flattened capsule reads as lips when
+            closed and an open mouth when the talking animation stretches it. */}
+        <mesh ref={mouthRef} position={[0, -0.1, 0.5]} scale={[1, 0.3, 1]} material={mouthMaterial}>
+          <capsuleGeometry args={[0.045, 0.02, 6, 12]} />
         </mesh>
 
         {/* Nose */}
@@ -323,10 +364,10 @@ export function ProceduralBoy({ mouseHover = false }) {
         </group>
 
         {/* Eyebrows */}
-        <mesh position={[-0.2, 0.22, 0.46]} rotation={[0, 0, 0.08]} material={beardMaterial}>
+        <mesh position={[-0.2, 0.22, 0.46]} rotation={[0, 0, 0.08]} material={browMaterial}>
           <boxGeometry args={[0.18, 0.035, 0.04]} />
         </mesh>
-        <mesh position={[0.2, 0.22, 0.46]} rotation={[0, 0, -0.08]} material={beardMaterial}>
+        <mesh position={[0.2, 0.22, 0.46]} rotation={[0, 0, -0.08]} material={browMaterial}>
           <boxGeometry args={[0.18, 0.035, 0.04]} />
         </mesh>
 

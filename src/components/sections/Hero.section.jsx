@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useRef } from 'react';
-import { ArrowDown, ArrowUpRight, Download, Volume2, Square } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Download, Volume2, VolumeX } from 'lucide-react';
 import { profile } from '../../data/profile';
 import { Button } from '../ui/Button';
 import { MagneticButton } from '../ui/MagneticButton';
@@ -12,37 +12,74 @@ const Avatar3DLazy = lazy(() =>
 );
 
 export function Hero() {
+  // Single source of truth: this one useSpeech instance drives BOTH the spoken
+  // intro and the avatar's lip-sync (speaking flag passed into Avatar3D).
   const { speak, stop, speaking, supported } = useSpeech();
   const reducedMotion = useReducedMotion();
-  const gestureFiredRef = useRef(false);
+  const introStartedRef = useRef(false);
 
   const scrollToWork = () => {
     const el = document.getElementById('work');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const toggleIntro = () => (speaking ? stop() : speak(profile.voiceIntro));
+  const startIntro = () => {
+    introStartedRef.current = true;
+    speak(profile.voiceIntro);
+  };
 
-  // One-time first-gesture trigger (browser autoplay policy blocks mount-only audio).
+  const replayIntro = () => (speaking ? stop() : startIntro());
+
+  // Auto-start the intro on page load / reload. Browsers block audio autoplay
+  // without a prior user gesture, so guaranteed-on-every-load autoplay is not
+  // reliable. Best-effort pattern:
+  //   1. Attempt to start immediately on mount.
+  //   2. Also arm a one-time first-gesture listener that starts the intro if it
+  //      hasn't begun yet, then removes itself.
+  // A module/session flag keeps it to once per page load (re-renders won't
+  // re-trigger), while a fresh reload starts a new session and plays again.
   useEffect(() => {
     if (!supported) return;
+    if (typeof window !== 'undefined' &&
+        window.sessionStorage?.getItem('introPlayed') === '1') {
+      return;
+    }
 
+    const markPlayed = () => {
+      try {
+        window.sessionStorage?.setItem('introPlayed', '1');
+      } catch {
+        // sessionStorage may be unavailable (privacy mode); ignore.
+      }
+    };
+
+    const beginIntro = () => {
+      if (introStartedRef.current) return;
+      startIntro();
+      markPlayed();
+    };
+
+    // 1. Best-effort immediate start.
+    beginIntro();
+
+    // 2. First-gesture fallback for browsers that blocked the autoplay attempt.
     const handleFirstGesture = () => {
-      if (gestureFiredRef.current) return;
-      gestureFiredRef.current = true;
-      speak(profile.voiceIntro);
-      document.removeEventListener('click', handleFirstGesture);
-      document.removeEventListener('keydown', handleFirstGesture);
+      beginIntro();
+      removeGestureListeners();
     };
-
-    document.addEventListener('click', handleFirstGesture);
-    document.addEventListener('keydown', handleFirstGesture);
-
-    return () => {
-      document.removeEventListener('click', handleFirstGesture);
-      document.removeEventListener('keydown', handleFirstGesture);
+    const gestureEvents = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
+    const removeGestureListeners = () => {
+      gestureEvents.forEach((evt) =>
+        document.removeEventListener(evt, handleFirstGesture)
+      );
     };
-  }, [supported, speak]);
+    gestureEvents.forEach((evt) =>
+      document.addEventListener(evt, handleFirstGesture, { passive: true, once: false })
+    );
+
+    return removeGestureListeners;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supported]);
 
   return (
     <section className="relative min-h-[92vh] flex flex-col justify-center pt-28 md:pt-36 pb-16 overflow-hidden">
@@ -147,41 +184,39 @@ export function Hero() {
                     </div>
                   }
                 >
-                  <Avatar3DLazy className="h-full w-full" height="100%" />
+                  <Avatar3DLazy className="h-full w-full" height="100%" speaking={speaking} />
                 </Suspense>
-              </div>
 
-              {/* Speaking-avatar voice control (Web Speech API) */}
-              {supported && (
-                <div className="mt-5 flex items-center justify-center gap-3">
-                  <Button
-                    onClick={toggleIntro}
-                    variant="outline"
-                    size="sm"
+                {/* Subtle replay / stop affordance — the intro auto-starts, so this
+                    is a small secondary control, not the primary play button. */}
+                {supported && (
+                  <button
+                    type="button"
+                    onClick={replayIntro}
                     aria-label={
                       speaking
                         ? 'Stop introduction audio'
-                        : 'Play audio introduction'
+                        : 'Replay audio introduction'
                     }
-                    icon={speaking ? <Square size={14} /> : <Volume2 size={14} />}
-                    iconPosition="left"
+                    className="absolute bottom-4 right-4 z-10 inline-flex items-center justify-center w-9 h-9 rounded-full bg-surface/80 border border-border text-muted backdrop-blur-sm hover:text-accent hover:border-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
-                    {speaking ? '⏸ Stop' : '▶ Hear intro'}
-                  </Button>
+                    {speaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                  </button>
+                )}
 
-                  {speaking && (
-                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border text-muted font-mono text-xs uppercase tracking-wider">
-                      <span className="relative flex w-2 h-2">
-                        {!reducedMotion && (
-                          <span className="absolute inline-flex w-full h-full rounded-full bg-accent opacity-75 animate-ping" />
-                        )}
-                        <span className="relative inline-flex w-2 h-2 rounded-full bg-accent" />
-                      </span>
-                      Speaking…
+                {/* Speaking indicator */}
+                {supported && speaking && (
+                  <span className="absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface/80 border border-border text-muted font-mono text-[10px] uppercase tracking-wider backdrop-blur-sm">
+                    <span className="relative flex w-2 h-2">
+                      {!reducedMotion && (
+                        <span className="absolute inline-flex w-full h-full rounded-full bg-accent opacity-75 animate-ping" />
+                      )}
+                      <span className="relative inline-flex w-2 h-2 rounded-full bg-accent" />
                     </span>
-                  )}
-                </div>
-              )}
+                    Speaking…
+                  </span>
+                )}
+              </div>
             </Reveal>
           </div>
         </div>
