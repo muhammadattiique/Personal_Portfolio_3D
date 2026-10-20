@@ -4,9 +4,12 @@ import { profile } from '../../data/profile';
 import { Button } from '../ui/Button';
 import { MagneticButton } from '../ui/MagneticButton';
 import { Reveal } from '../ui/Reveal';
+import { AvatarImage } from '../avatar/AvatarImage';
 import { useSpeech, useReducedMotion } from '../../hooks';
 
-// Lazy-load Avatar3D so hero text renders instantaneously
+// Lazy-load the 3D avatar so the hero text renders instantly and the Three.js
+// engine only loads when needed. The AvatarImage portrait shows as the Suspense
+// fallback (and inside Avatar3D as the model's own fallback).
 const Avatar3DLazy = lazy(() =>
   import('../avatar/Avatar3D').then((m) => ({ default: m.Avatar3D }))
 );
@@ -179,9 +182,7 @@ export function Hero() {
 
                 <Suspense
                   fallback={
-                    <div className="w-full h-full flex items-center justify-center font-mono text-xs text-muted animate-pulse">
-                      LOADING 3D SPECIMEN...
-                    </div>
+                    <AvatarImage className="h-full w-full" height="100%" speaking={speaking} />
                   }
                 >
                   <Avatar3DLazy className="h-full w-full" height="100%" speaking={speaking} />

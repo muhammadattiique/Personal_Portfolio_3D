@@ -107,4 +107,13 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Speaking avatar: pulsing soft glow near the mouth area */
+  @keyframes avatarMouthGlow {
+    0%, 100% { opacity: 0.25; transform: translateX(-50%) scale(0.85); }
+    50%      { opacity: 0.6;  transform: translateX(-50%) scale(1.1); }
+  }
+  .avatar-mouth-glow {
+    animation: avatarMouthGlow 0.5s ease-in-out infinite;
+  }
 }

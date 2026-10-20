@@ -1,7 +1,7 @@
 // Project data for Muhammad Attique's portfolio
 // Each project contains rich case-study details for the /projects/:slug route.
-// Cover images reference ONLY the four SVGs that exist in public/projects/:
-//   bank-management.svg, multi-client-chat.svg, shopping-cart.svg, vesper-calculator.svg
+// Each project has its own themed cover illustration in public/projects/<slug>.svg,
+// drawn in the site's indigo/blue/violet palette to match the project's theme.
 // The first four entries (featured: true) are the strongest, recruiter-appealing builds
 // and are shown on the Home "Selected Work" grid; the rest appear via "See all".
 
@@ -18,8 +18,8 @@ export const projects = [
     category: "Backend & Systems",
     featured: true,
     tags: ["Java", "Spring Boot", "REST API", "OOP"],
-    coverImage: "/projects/shopping-cart.svg",
-    gallery: ["/projects/shopping-cart.svg"],
+    coverImage: "/projects/ecommerce-marketplace.svg",
+    gallery: ["/projects/ecommerce-marketplace.svg"],
     summary:
       "A Java-based e-commerce marketplace backend that models the core commerce flow — browsing a product catalog, managing a shopping cart, and placing orders — with a clean, object-oriented service layer.",
     overview:
@@ -108,8 +108,8 @@ export const projects = [
     category: "Object-Oriented Programming",
     featured: true,
     tags: ["C++", "File Handling", "Caesar Cipher", "Authentication"],
-    coverImage: "/projects/bank-management.svg",
-    gallery: ["/projects/bank-management.svg"],
+    coverImage: "/projects/secure-voting.svg",
+    gallery: ["/projects/secure-voting.svg"],
     summary:
       "A console voting system in C++ that authenticates voters by CNIC, prevents double-voting, encrypts stored data with a Caesar cipher, and lets an admin tally real-time party-wise results.",
     overview:
@@ -138,8 +138,8 @@ export const projects = [
     category: "Web Applications",
     featured: false,
     tags: ["Open Source", "Hacktoberfest", "Web", "Collaboration"],
-    coverImage: "/projects/shopping-cart.svg",
-    gallery: ["/projects/shopping-cart.svg"],
+    coverImage: "/projects/awaaz-pakistan.svg",
+    gallery: ["/projects/awaaz-pakistan.svg"],
     summary:
       "An open-source, collaborative civic-tech project — a 'voice of Pakistan' platform — contributed to during Hacktoberfest alongside the wider community.",
     overview:
@@ -168,8 +168,8 @@ export const projects = [
     category: "Web Applications",
     featured: false,
     tags: ["HTML5", "CSS3", "JavaScript", "PHP", "MySQL"],
-    coverImage: "/projects/shopping-cart.svg",
-    gallery: ["/projects/shopping-cart.svg"],
+    coverImage: "/projects/online-shopping-cart.svg",
+    gallery: ["/projects/online-shopping-cart.svg"],
     summary:
       "An online shopping cart web application where users can browse products, add items to a cart, and manage their selections, built with a PHP backend running on XAMPP.",
     overview:
@@ -198,8 +198,8 @@ export const projects = [
     category: "Web Applications",
     featured: false,
     tags: ["PHP", "MySQL", "Authentication", "CRUD"],
-    coverImage: "/projects/bank-management.svg",
-    gallery: ["/projects/bank-management.svg"],
+    coverImage: "/projects/library-management.svg",
+    gallery: ["/projects/library-management.svg"],
     summary:
       "A web-based library management system built with PHP and MySQL that manages books, student accounts, borrowing records, and availability tracking behind an authenticated interface.",
     overview:
@@ -228,8 +228,8 @@ export const projects = [
     category: "Applications",
     featured: false,
     tags: ["Python", "File Handling", "OOP", "Authentication"],
-    coverImage: "/projects/multi-client-chat.svg",
-    gallery: ["/projects/multi-client-chat.svg"],
+    coverImage: "/projects/student-management.svg",
+    gallery: ["/projects/student-management.svg"],
     summary:
       "A Python application with an admin portal to manage students, courses, attendance, and results, plus a student login so learners can view their own records.",
     overview:
@@ -258,8 +258,8 @@ export const projects = [
     category: "Web Applications",
     featured: false,
     tags: ["HTML5", "CSS3", "JavaScript", "OpenWeather API"],
-    coverImage: "/projects/shopping-cart.svg",
-    gallery: ["/projects/shopping-cart.svg"],
+    coverImage: "/projects/weather-application.svg",
+    gallery: ["/projects/weather-application.svg"],
     summary:
       "A responsive weather web application built with HTML, CSS, and JavaScript that lets users search a city and view current conditions, hourly data, and forecasts using the OpenWeather API.",
     overview:
@@ -288,8 +288,8 @@ export const projects = [
     category: "Object-Oriented Programming",
     featured: false,
     tags: ["C++", "OOP", "File Handling", "Console"],
-    coverImage: "/projects/bank-management.svg",
-    gallery: ["/projects/bank-management.svg"],
+    coverImage: "/projects/airline-management.svg",
+    gallery: ["/projects/airline-management.svg"],
     summary:
       "A C++ console airline booking system with separate admin and passenger portals, seat reservation, dynamic pricing, and support for domestic and international tickets.",
     overview:
@@ -318,8 +318,8 @@ export const projects = [
     category: "Applications",
     featured: false,
     tags: ["Python", "Turtle Graphics", "Game"],
-    coverImage: "/projects/multi-client-chat.svg",
-    gallery: ["/projects/multi-client-chat.svg"],
+    coverImage: "/projects/snake-game.svg",
+    gallery: ["/projects/snake-game.svg"],
     summary:
       "A classic Snake game built in Python with the turtle graphics module, featuring arrow-key controls, score and high-score tracking, snake growth, border wrap, and self-collision game over.",
     overview:

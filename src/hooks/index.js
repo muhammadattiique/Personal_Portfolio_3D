@@ -87,18 +87,45 @@ export function useSpeech() {
       const isEn = (v) => v.lang && v.lang.toLowerCase().startsWith('en');
       const nameIncludes = (v, s) =>
         v.name && v.name.toLowerCase().includes(s.toLowerCase());
+      const anyName = (v, list) => list.some((n) => nameIncludes(v, n));
 
-      // Preference order (first match wins), tuned for natural-sounding
-      // en-US/en-GB voices across platforms rather than the robotic default.
-      const namedVoices = ['aria', 'jenny', 'guy', 'zira', 'david'];
+      // YOUNG-sounding modern male neural voices first — these read like a young
+      // man rather than the older, deeper classic voices (David/Mark/Fred).
+      const youngMaleNames = [
+        'guy', 'ryan', 'christopher', 'eric', 'brandon', 'liam', 'oliver',
+        'aaron', 'jason', 'tony', 'sam', 'ethan', 'noah',
+      ];
+      // Other known MALE English voice names (fallback, may sound older/deeper).
+      const maleNames = [
+        ...youngMaleNames, 'david', 'mark', 'george', 'james', 'william',
+        'brian', 'daniel', 'alex', 'fred', 'arthur', 'thomas', 'ravi',
+        'prabhat', 'rishi', 'male',
+      ];
+      // Known FEMALE English voice names to explicitly avoid when possible.
+      const femaleNames = [
+        'aria', 'jenny', 'zira', 'michelle', 'ana', 'female', 'samantha',
+        'victoria', 'susan', 'linda', 'heera', 'catherine', 'karen', 'moira',
+        'tessa', 'serena', 'fiona', 'kate', 'hazel', 'sonia', 'emily', 'eva',
+      ];
+
+      const youngMaleEn = (v) => isEn(v) && anyName(v, youngMaleNames);
+      const maleEn = (v) => isEn(v) && anyName(v, maleNames);
+      const notFemaleEn = (v) => isEn(v) && !anyName(v, femaleNames);
+
+      // Preference order (first match wins): a young-sounding natural/online male
+      // voice first, then any young male, then any male, then a non-female English
+      // voice, then any English voice.
       voiceRef.current =
-        voices.find((v) => nameIncludes(v, 'natural') && isEn(v)) ||
-        voices.find((v) => nameIncludes(v, 'google') && isEn(v)) ||
-        voices.find(
-          (v) => isEn(v) && namedVoices.some((n) => nameIncludes(v, n))
-        ) ||
+        voices.find((v) => youngMaleEn(v) && (nameIncludes(v, 'natural') || nameIncludes(v, 'online'))) ||
+        voices.find((v) => youngMaleEn(v)) ||
+        voices.find((v) => maleEn(v) && nameIncludes(v, 'natural')) ||
+        voices.find((v) => maleEn(v) && nameIncludes(v, 'google')) ||
+        voices.find((v) => maleEn(v)) ||
+        voices.find((v) => notFemaleEn(v) && nameIncludes(v, 'natural')) ||
+        voices.find((v) => notFemaleEn(v) && nameIncludes(v, 'google')) ||
+        voices.find((v) => notFemaleEn(v) && v.lang.toLowerCase().startsWith('en-us')) ||
+        voices.find((v) => notFemaleEn(v)) ||
         voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('en-us')) ||
-        voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('en-gb')) ||
         voices.find((v) => isEn(v)) ||
         null;
     };
@@ -121,8 +148,10 @@ export function useSpeech() {
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
-      utterance.rate = 0.95;
-      utterance.pitch = 1.0;
+      // Higher pitch + lively rate gives a lighter, thinner ("bareek") young-boy
+      // tone rather than a deep/older voice, on whatever male voice the device has.
+      utterance.rate = 1.03;
+      utterance.pitch = 1.4;
       if (voiceRef.current) utterance.voice = voiceRef.current;
 
       utterance.onstart = () => setSpeaking(true);

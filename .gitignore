@@ -32,3 +32,6 @@ coverage/
 # Misc
 *.tgz
 .cache/
+
+# Internal agent/workflow task artifacts (not part of the app)
+.agents/

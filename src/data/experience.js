@@ -2,6 +2,21 @@
 
 export const experiences = [
   {
+    id: "tavern",
+    role: "Full-Stack Web Developer Intern",
+    company: "Tavern",
+    duration: "Oct 2026 – Present",
+    isCurrent: true,
+    location: "Pakistan",
+    description: "Working as a full-stack web developer, building and shipping web features end to end across the frontend and backend in a fast-paced product team.",
+    highlights: [
+      "Developing responsive, component-driven user interfaces with React and modern CSS.",
+      "Building and integrating backend APIs to deliver complete full-stack features.",
+      "Collaborating on the full development workflow from implementation through to delivery.",
+    ],
+    tags: ["React", "JavaScript", "Full-Stack", "REST APIs", "Web Development"],
+  },
+  {
     id: "planet-beyond",
     role: "Software Engineer Intern",
     company: "Planet Beyond Pvt. Ltd",
