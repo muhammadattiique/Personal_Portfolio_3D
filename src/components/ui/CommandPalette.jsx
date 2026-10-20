@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Command, ArrowUpRight, Github, Linkedin, Twitter, Mail, FileText, ArrowDown } from 'lucide-react';
+import { Search, Command, ArrowUpRight, Github, Linkedin, Mail, FileText, ArrowDown } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { projects } from '../../data/projects';
 import { profile } from '../../data/profile';
@@ -19,7 +19,6 @@ const navSections = [
 const externalLinks = [
   { label: 'GitHub', href: 'https://github.com/muhammadattiique', icon: Github, desc: 'Code repositories' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/muhammad-attique-45666b363', icon: Linkedin, desc: 'Professional network' },
-  { label: 'X / Twitter', href: 'https://x.com/muhammadattiique', icon: Twitter, desc: 'Social updates' },
   { label: 'Email', href: `mailto:${profile.email}`, icon: Mail, desc: 'Direct message' },
   { label: 'Download Resume', href: profile.resumeUrl, icon: FileText, desc: 'PDF resume' },
 ];

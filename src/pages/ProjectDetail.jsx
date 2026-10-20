@@ -58,7 +58,7 @@ export default function ProjectDetail() {
             </Link>
 
             <span className="font-mono text-xs text-muted/60">
-              {project.number} / 04
+              {project.number} / 06
             </span>
           </div>
 

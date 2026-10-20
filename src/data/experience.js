@@ -2,44 +2,29 @@
 
 export const experiences = [
   {
-    id: "tavern",
-    role: "Full Stack Web Developer Intern",
-    company: "Tavern",
-    duration: "Oct 2026 – Present",
-    isCurrent: true,
-    location: "Rawalpindi / Hybrid",
-    description: "Developing production web features, modern React components, and integrating REST APIs across an agile cross-functional engineering team.",
-    highlights: [
-      "Engineered responsive, accessible UI modules using React and Tailwind CSS.",
-      "Integrated backend endpoints and ensured data integrity across client states.",
-      "Collaborated in sprint planning, architecture discussions, and code reviews.",
-    ],
-    tags: ["React", "Tailwind CSS", "REST APIs", "Full-Stack", "JavaScript"],
-  },
-  {
     id: "planet-beyond",
-    role: "Software Engineering Intern",
-    company: "Planet Beyond",
+    role: "Software Engineer Intern",
+    company: "Planet Beyond Pvt. Ltd",
     duration: "Jul 2026 – Sep 2026",
     isCurrent: false,
-    location: "Islamabad, Pakistan",
-    description: "Full-stack development across web interfaces, cross-platform mobile prototypes, Java backend services, and Dockerized environments.",
+    location: "Islamabad / Rawalpindi, Pakistan",
+    description: "Worked across backend services, frontend, and DevOps, contributing to microservices, event-driven systems, and CI/CD pipelines in a cross-functional engineering team.",
     highlights: [
-      "Built web UIs with React.js and developed mobile cross-platform screens in React Native.",
-      "Engineered backend microservices utilizing Java 17 and Spring Boot.",
-      "Containerized microservices using Docker and deployed workloads onto Kubernetes clusters.",
+      "Built backend services and microservices with Java and Spring Boot, including event-driven messaging with Kafka and containerization using Docker.",
+      "Developed frontend interfaces with React.js and Tailwind CSS, and cross-platform mobile screens with React Native.",
+      "Set up CI/CD workflows with Jenkins, handled deployments on Ubuntu and Rocky Linux, and explored Kubernetes fundamentals.",
     ],
-    tags: ["Java 17", "Spring Boot", "Docker", "Kubernetes", "React", "React Native"],
+    tags: ["Java", "Spring Boot", "Kafka", "Docker", "React.js", "React Native", "Jenkins", "CI/CD", "Kubernetes", "Linux"],
   },
 ];
 
 export const education = [
   {
     id: "bachelors",
-    degree: "Bachelor of Science in Computer Science (BSCS)",
+    degree: "Bachelor of Science in Computer Science (In Progress)",
     institution: "PMAS Arid Agriculture University Rawalpindi",
     location: "Rawalpindi, Pakistan",
-    duration: "2023 – Present",
-    details: "Core coursework: Data Structures & Algorithms, Object-Oriented Programming, Computer Networks, Operating Systems, Database Systems, Software Engineering.",
+    duration: "09/2023 – 05/2027 (expected)",
+    details: "Currently maintaining a CGPA of 3.84/4.00 with 6 semesters completed. Relevant coursework: Data Structures & Algorithms, Object-Oriented Programming, Computer Networks, Operating Systems, Database Systems, and Software Engineering.",
   },
 ];
