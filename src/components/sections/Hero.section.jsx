@@ -1,9 +1,10 @@
-import { Suspense, lazy } from 'react';
-import { ArrowDown, ArrowUpRight, Download } from 'lucide-react';
+import { Suspense, lazy, useEffect, useRef } from 'react';
+import { ArrowDown, ArrowUpRight, Download, Volume2, Square } from 'lucide-react';
 import { profile } from '../../data/profile';
 import { Button } from '../ui/Button';
 import { MagneticButton } from '../ui/MagneticButton';
 import { Reveal } from '../ui/Reveal';
+import { useSpeech, useReducedMotion } from '../../hooks';
 
 // Lazy-load Avatar3D so hero text renders instantaneously
 const Avatar3DLazy = lazy(() =>
@@ -11,10 +12,37 @@ const Avatar3DLazy = lazy(() =>
 );
 
 export function Hero() {
+  const { speak, stop, speaking, supported } = useSpeech();
+  const reducedMotion = useReducedMotion();
+  const gestureFiredRef = useRef(false);
+
   const scrollToWork = () => {
     const el = document.getElementById('work');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const toggleIntro = () => (speaking ? stop() : speak(profile.voiceIntro));
+
+  // One-time first-gesture trigger (browser autoplay policy blocks mount-only audio).
+  useEffect(() => {
+    if (!supported) return;
+
+    const handleFirstGesture = () => {
+      if (gestureFiredRef.current) return;
+      gestureFiredRef.current = true;
+      speak(profile.voiceIntro);
+      document.removeEventListener('click', handleFirstGesture);
+      document.removeEventListener('keydown', handleFirstGesture);
+    };
+
+    document.addEventListener('click', handleFirstGesture);
+    document.addEventListener('keydown', handleFirstGesture);
+
+    return () => {
+      document.removeEventListener('click', handleFirstGesture);
+      document.removeEventListener('keydown', handleFirstGesture);
+    };
+  }, [supported, speak]);
 
   return (
     <section className="relative min-h-[92vh] flex flex-col justify-center pt-28 md:pt-36 pb-16 overflow-hidden">
@@ -122,6 +150,38 @@ export function Hero() {
                   <Avatar3DLazy className="h-full w-full" height="100%" />
                 </Suspense>
               </div>
+
+              {/* Speaking-avatar voice control (Web Speech API) */}
+              {supported && (
+                <div className="mt-5 flex items-center justify-center gap-3">
+                  <Button
+                    onClick={toggleIntro}
+                    variant="outline"
+                    size="sm"
+                    aria-label={
+                      speaking
+                        ? 'Stop introduction audio'
+                        : 'Play audio introduction'
+                    }
+                    icon={speaking ? <Square size={14} /> : <Volume2 size={14} />}
+                    iconPosition="left"
+                  >
+                    {speaking ? '⏸ Stop' : '▶ Hear intro'}
+                  </Button>
+
+                  {speaking && (
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border text-muted font-mono text-xs uppercase tracking-wider">
+                      <span className="relative flex w-2 h-2">
+                        {!reducedMotion && (
+                          <span className="absolute inline-flex w-full h-full rounded-full bg-accent opacity-75 animate-ping" />
+                        )}
+                        <span className="relative inline-flex w-2 h-2 rounded-full bg-accent" />
+                      </span>
+                      Speaking…
+                    </span>
+                  )}
+                </div>
+              )}
             </Reveal>
           </div>
         </div>

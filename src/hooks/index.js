@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 /**
  * Tracks normalized or screen mouse coordinates
@@ -62,4 +62,70 @@ export function useReducedMotion() {
   }, []);
 
   return reducedMotion;
+}
+
+/**
+ * Speaking-avatar helper built on the browser Web Speech API.
+ * Returns { speak, stop, speaking, supported }. Degrades gracefully when
+ * window.speechSynthesis is unavailable and never loops audio.
+ */
+export function useSpeech() {
+  const supported =
+    typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+  const [speaking, setSpeaking] = useState(false);
+  const voiceRef = useRef(null);
+
+  // Resolve an English voice; voices can load asynchronously.
+  useEffect(() => {
+    if (!supported) return;
+
+    const pickVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || voices.length === 0) return;
+      voiceRef.current =
+        voices.find((v) => v.lang && v.lang.startsWith('en-US')) ||
+        voices.find((v) => v.lang && v.lang.startsWith('en-GB')) ||
+        voices.find((v) => v.lang && v.lang.startsWith('en')) ||
+        null;
+    };
+
+    pickVoice();
+    window.speechSynthesis.addEventListener('voiceschanged', pickVoice);
+
+    return () => {
+      window.speechSynthesis.removeEventListener('voiceschanged', pickVoice);
+      // Stop any ongoing speech when the consumer unmounts.
+      window.speechSynthesis.cancel();
+    };
+  }, [supported]);
+
+  const speak = useCallback(
+    (text) => {
+      if (!supported || !text) return;
+      // Cancel anything ongoing so audio never overlaps or loops.
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.95;
+      utterance.pitch = 1.0;
+      if (voiceRef.current) utterance.voice = voiceRef.current;
+
+      utterance.onstart = () => setSpeaking(true);
+      utterance.onend = () => setSpeaking(false);
+      utterance.onerror = () => setSpeaking(false);
+
+      window.speechSynthesis.speak(utterance);
+    },
+    [supported]
+  );
+
+  const stop = useCallback(() => {
+    if (!supported) return;
+    window.speechSynthesis.cancel();
+    setSpeaking(false);
+  }, [supported]);
+
+  return { speak, stop, speaking, supported };
 }
