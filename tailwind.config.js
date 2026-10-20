@@ -8,19 +8,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Logan-inspired editorial dark palette
-        background: '#0A0A0C',
-        surface: '#111114',
-        'surface-elevated': '#17171B',
-        border: 'rgba(255, 255, 255, 0.08)',
-        'border-strong': 'rgba(255, 255, 255, 0.16)',
-        foreground: '#EDEDED',
-        muted: '#8A8A8E',
-        faint: '#4A4A50',
-        // ONE subtle accent — signature Logan electric lime
-        accent: '#C6FF3D',
-        'accent-soft': 'rgba(198, 255, 61, 0.12)',
-        'accent-glow': 'rgba(198, 255, 61, 0.3)',
+        // Deep-indigo / midnight editorial palette
+        background: '#0B1020',
+        surface: '#121832',
+        'surface-elevated': '#1A2142',
+        border: 'rgba(255, 255, 255, 0.09)',
+        'border-strong': 'rgba(255, 255, 255, 0.18)',
+        foreground: '#F2F4FF',
+        muted: '#9AA3C7',
+        faint: '#5A6291',
+        // Refined blue accent + violet secondary accent
+        accent: '#4F8CFF',
+        'accent-soft': 'rgba(79, 140, 255, 0.14)',
+        'accent-glow': 'rgba(79, 140, 255, 0.35)',
+        'accent-2': '#A855F7',
+        'accent-2-soft': 'rgba(168, 85, 247, 0.14)',
       },
       fontFamily: {
         sans: ['"Geist"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],

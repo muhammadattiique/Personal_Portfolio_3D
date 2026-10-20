@@ -1,0 +1,29 @@
+{
+  "id": "FEAT-001",
+  "type": "refactor",
+  "description": "Replace the near-black + electric-lime theme with a deep-indigo/midnight palette and a refined blue (#4F8CFF) accent plus a new violet secondary accent (#A855F7). Apply in BOTH the CSS custom properties (src/index.css :root) and the Tailwind color config (tailwind.config.js), keeping every existing variable/key name so no utility class breaks, and ADD new accent-2 keys. Then replace every hardcoded old lime hex in components (found by grep) with the new blue. Independent of FEAT-002 and FEAT-003 (touches only styling/config + color literals), but ordered first so the whole app renders in the new theme.",
+  "status": "completed",
+  "steps": [
+    "In src/index.css, inside the `:root` block, change values (keep names): --bg-color:#0B1020; --surface-color:#121832; --surface-elevated-color:#1A2142; --border-color:rgba(255,255,255,0.09); --border-strong-color:rgba(255,255,255,0.18); --text-color and --foreground-color:#F2F4FF; --muted-color:#9AA3C7; --faint-color:#5A6291; --accent-color:#4F8CFF; --accent-soft-color:rgba(79,140,255,0.14); --accent-glow-color:rgba(79,140,255,0.35). ADD two new lines: --accent-2-color:#A855F7; --accent-2-soft-color:rgba(168,85,247,0.14).",
+    "In tailwind.config.js, inside theme.extend.colors, set the matching values on the existing keys: background:'#0B1020', surface:'#121832', 'surface-elevated':'#1A2142', border:'rgba(255,255,255,0.09)', 'border-strong':'rgba(255,255,255,0.18)', foreground:'#F2F4FF', muted:'#9AA3C7', faint:'#5A6291', accent:'#4F8CFF', 'accent-soft':'rgba(79,140,255,0.14)', 'accent-glow':'rgba(79,140,255,0.35)'. ADD 'accent-2':'#A855F7' and 'accent-2-soft':'rgba(168,85,247,0.14)'. Update the stale 'Logan-inspired' / 'electric lime' comments to describe the new palette.",
+    "src/components/avatar/Avatar3D.jsx: change the <pointLight ... color=\"#C6FF3D\" /> to color=\"#4F8CFF\", and in StaticAvatarFallback change the box shadow rgba(198,255,61,0.2) to rgba(79,140,255,0.2).",
+    "src/components/avatar/ProceduralBoy.jsx: in accentMaterial change both color:'#C6FF3D' and emissive:'#C6FF3D' to '#4F8CFF'.",
+    "src/components/ui/Button.jsx: in variantStyles.primary change shadow-[0_0_20px_rgba(198,255,61,0.2)] to shadow-[0_0_20px_rgba(79,140,255,0.2)] (leave the white hover shadow as-is).",
+    "src/pages/Projects.jsx: in the active category pill change shadow-[0_0_15px_rgba(198,255,61,0.25)] to shadow-[0_0_15px_rgba(79,140,255,0.25)].",
+    "src/components/ui/CustomCursor.jsx: replace both occurrences of '#C6FF3D' with '#4F8CFF' and rgba(198,255,61,0.4) with rgba(79,140,255,0.4)."
+  ],
+  "acceptance_criteria": [
+    "`npm run build` completes successfully.",
+    "Grep of src/ for 'C6FF3D' returns zero matches.",
+    "Grep of src/ for the regex '198, ?255, ?61' returns zero matches.",
+    "Grep of src/ for '0A0A0C', '111114', '17171B' returns zero matches (old backgrounds only lived in index.css/tailwind.config.js and are now replaced).",
+    "src/index.css and tailwind.config.js contain the new accent-2 / accent-2-soft keys."
+  ],
+  "verification": [
+    "Run `npm run build` and confirm it exits 0.",
+    "Run `npm run lint` and confirm no new errors.",
+    "Grep src/ for C6FF3D, '198, ?255, ?61', 0A0A0C, 111114, 17171B and confirm zero matches."
+  ],
+  "blocked_reason": null,
+  "findings": "Completed. New palette applied in src/index.css :root (all variable names kept) and tailwind.config.js (all keys kept; stale 'Logan'/'electric lime' comments updated). Added accent-2 (#A855F7) and accent-2-soft (rgba(168,85,247,0.14)) in BOTH files. Replaced hardcoded lime in Avatar3D.jsx (pointLight color + StaticAvatarFallback shadow), ProceduralBoy.jsx (accentMaterial color+emissive), Button.jsx (primary shadow), Projects.jsx (active pill shadow), CustomCursor.jsx (two #C6FF3D occurrences in backgroundColor + rgba(198,255,61,0.4) ring borderColor). Grep of src/ for C6FF3D, '198, ?255, ?61', 0A0A0C, 111114, 17171B = zero matches. node_modules was missing; ran `npm install` once (304 packages). `npm run build` exits 0; `npm run lint` has 0 errors (5 pre-existing warnings in CommandPalette.jsx, ProjectCard.jsx, Toast.jsx — not touched by this feature). No other src files referenced the old lime hex or old backgrounds. The new accent-2 / accent-2-soft keys are available for later features to use as a violet secondary accent (not yet consumed anywhere)."
+}

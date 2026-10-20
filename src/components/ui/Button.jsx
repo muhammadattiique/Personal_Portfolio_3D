@@ -29,7 +29,7 @@ export const Button = forwardRef(function Button(
 
   const variantStyles = {
     primary:
-      'bg-accent text-background hover:bg-white hover:text-background shadow-[0_0_20px_rgba(198,255,61,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] font-semibold',
+      'bg-accent text-background hover:bg-white hover:text-background shadow-[0_0_20px_rgba(79,140,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] font-semibold',
     secondary:
       'bg-surface-elevated text-foreground border border-border hover:border-accent hover:text-accent',
     outline:

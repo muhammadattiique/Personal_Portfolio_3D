@@ -70,7 +70,7 @@ class WebGLErrorBoundary extends Component {
 function StaticAvatarFallback() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-8 rounded-3xl bg-surface border border-border text-center">
-      <div className="w-24 h-24 rounded-full bg-surface-elevated border border-accent/30 flex items-center justify-center font-display text-3xl font-bold text-accent mb-4 shadow-[0_0_30px_rgba(198,255,61,0.2)]">
+      <div className="w-24 h-24 rounded-full bg-surface-elevated border border-accent/30 flex items-center justify-center font-display text-3xl font-bold text-accent mb-4 shadow-[0_0_30px_rgba(79,140,255,0.2)]">
         MA
       </div>
       <h3 className="font-display font-semibold text-foreground text-lg">Muhammad Attique</h3>
@@ -157,11 +157,11 @@ export function Avatar3D({ className = '', height = '520px' }) {
             color="#A8B8FF"
           />
 
-          {/* Signature Accent Lime Bounce Light (Underneath) */}
+          {/* Signature Accent Blue Bounce Light (Underneath) */}
           <pointLight
             position={[0, -2, 1.5]}
             intensity={0.8}
-            color="#C6FF3D"
+            color="#4F8CFF"
             distance={5}
           />
 

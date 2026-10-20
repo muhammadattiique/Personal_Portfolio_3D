@@ -64,7 +64,7 @@ export default function Projects() {
                 whileTap={{ scale: 0.98 }}
                 className={`font-mono text-xs uppercase tracking-wider px-4 py-2 rounded-full border transition-all duration-200 ${
                   selectedCategory === category
-                    ? 'bg-accent text-background border-accent font-semibold shadow-[0_0_15px_rgba(198,255,61,0.25)]'
+                    ? 'bg-accent text-background border-accent font-semibold shadow-[0_0_15px_rgba(79,140,255,0.25)]'
                     : 'bg-surface text-muted border-border hover:border-border-strong hover:text-foreground'
                 }`}
               >

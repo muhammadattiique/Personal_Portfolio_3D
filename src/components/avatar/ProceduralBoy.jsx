@@ -153,10 +153,10 @@ export function ProceduralBoy({ mouseHover = false }) {
   });
 
   const accentMaterial = new THREE.MeshStandardMaterial({
-    color: '#C6FF3D',
+    color: '#4F8CFF',
     roughness: 0.3,
     metalness: 0.1,
-    emissive: '#C6FF3D',
+    emissive: '#4F8CFF',
     emissiveIntensity: 0.25,
   });
 

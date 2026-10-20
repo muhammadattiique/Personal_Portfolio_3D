@@ -5,18 +5,20 @@
 
 @layer base {
   :root {
-    --bg-color: #0A0A0C;
-    --text-color: #EDEDED;
-    --surface-color: #111114;
-    --surface-elevated-color: #17171B;
-    --border-color: rgba(255, 255, 255, 0.08);
-    --border-strong-color: rgba(255, 255, 255, 0.16);
-    --foreground-color: #EDEDED;
-    --muted-color: #8A8A8E;
-    --faint-color: #4A4A50;
-    --accent-color: #C6FF3D;
-    --accent-soft-color: rgba(198, 255, 61, 0.12);
-    --accent-glow-color: rgba(198, 255, 61, 0.3);
+    --bg-color: #0B1020;
+    --text-color: #F2F4FF;
+    --surface-color: #121832;
+    --surface-elevated-color: #1A2142;
+    --border-color: rgba(255, 255, 255, 0.09);
+    --border-strong-color: rgba(255, 255, 255, 0.18);
+    --foreground-color: #F2F4FF;
+    --muted-color: #9AA3C7;
+    --faint-color: #5A6291;
+    --accent-color: #4F8CFF;
+    --accent-soft-color: rgba(79, 140, 255, 0.14);
+    --accent-glow-color: rgba(79, 140, 255, 0.35);
+    --accent-2-color: #A855F7;
+    --accent-2-soft-color: rgba(168, 85, 247, 0.14);
   }
 
   * {

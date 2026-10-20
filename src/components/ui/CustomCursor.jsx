@@ -64,7 +64,7 @@ export function CustomCursor() {
           width: isView ? 80 : isPointer ? 24 : 8,
           height: isView ? 80 : isPointer ? 24 : 8,
           opacity: isView ? 1 : isPointer ? 0.35 : 1,
-          backgroundColor: isView ? '#C6FF3D' : '#C6FF3D',
+          backgroundColor: isView ? '#4F8CFF' : '#4F8CFF',
         }}
         transition={{
           type: 'spring',
@@ -89,7 +89,7 @@ export function CustomCursor() {
             y: mousePosition.y - (isPointer ? 20 : 16),
             width: isPointer ? 40 : 32,
             height: isPointer ? 40 : 32,
-            borderColor: isPointer ? 'rgba(198, 255, 61, 0.4)' : 'rgba(255, 255, 255, 0.2)',
+            borderColor: isPointer ? 'rgba(79, 140, 255, 0.4)' : 'rgba(255, 255, 255, 0.2)',
           }}
           transition={{
             type: 'spring',
