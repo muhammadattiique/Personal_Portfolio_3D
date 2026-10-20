@@ -1,0 +1,7 @@
+{
+  "task_id": "task-portfolio-revamp",
+  "task_description": "Revamp Muhammad Attique's React + Vite + Tailwind + Three.js portfolio: replace the near-black/lime theme with a deep-indigo + cyan/violet palette across CSS vars, Tailwind config, and all hardcoded component colors; rewrite profile/experience/skills/projects data to match the real resume and the 6 real GitHub repos; and add a browser Web Speech API speaking-avatar intro in the Hero section.",
+  "status": "completed",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003"],
+  "blocked_reason": null
+}
