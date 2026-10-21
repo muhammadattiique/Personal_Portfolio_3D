@@ -75,6 +75,9 @@ export function useSpeech() {
 
   const [speaking, setSpeaking] = useState(false);
   const voiceRef = useRef(null);
+  // Whether the resolved voice is clearly male; drives a harder pitch drop when
+  // the device only offers a neutral/female default voice.
+  const pickedIsMaleRef = useRef(false);
 
   // Resolve an English voice; voices can load asynchronously.
   useEffect(() => {
@@ -99,35 +102,45 @@ export function useSpeech() {
       const maleNames = [
         ...youngMaleNames, 'david', 'mark', 'george', 'james', 'william',
         'brian', 'daniel', 'alex', 'fred', 'arthur', 'thomas', 'ravi',
-        'prabhat', 'rishi', 'male',
+        'prabhat', 'rishi',
+        // Common iOS/Android male voices:
+        'aaron', 'arthur', 'gordon', 'rishi', 'male', 'man',
       ];
-      // Known FEMALE English voice names to explicitly avoid when possible.
+      // Known FEMALE English voice names to explicitly avoid.
       const femaleNames = [
-        'aria', 'jenny', 'zira', 'michelle', 'ana', 'female', 'samantha',
-        'victoria', 'susan', 'linda', 'heera', 'catherine', 'karen', 'moira',
-        'tessa', 'serena', 'fiona', 'kate', 'hazel', 'sonia', 'emily', 'eva',
+        'aria', 'jenny', 'zira', 'michelle', 'ana', 'female', 'woman',
+        'samantha', 'victoria', 'susan', 'linda', 'heera', 'catherine', 'karen',
+        'moira', 'tessa', 'serena', 'fiona', 'kate', 'hazel', 'sonia', 'emily',
+        'eva', 'martha', 'nora', 'amelie', 'joana', 'luciana', 'paulina',
       ];
+
+      // Android often names voices like "en-us-x-sfg#male_1-local" or exposes a
+      // male hint in the URI; match those too.
+      const uriMale = (v) =>
+        v.voiceURI && /male|#male|-m-|_m_|man/i.test(v.voiceURI) && !/female/i.test(v.voiceURI);
 
       const youngMaleEn = (v) => isEn(v) && anyName(v, youngMaleNames);
-      const maleEn = (v) => isEn(v) && anyName(v, maleNames);
-      const notFemaleEn = (v) => isEn(v) && !anyName(v, femaleNames);
+      const maleEn = (v) => isEn(v) && (anyName(v, maleNames) || uriMale(v));
+      const isFemale = (v) => anyName(v, femaleNames) || /female|#female/i.test(v.voiceURI || '');
+      const notFemaleEn = (v) => isEn(v) && !isFemale(v);
 
-      // Preference order (first match wins): a young-sounding natural/online male
-      // voice first, then any young male, then any male, then a non-female English
-      // voice, then any English voice.
-      voiceRef.current =
+      const picked =
         voices.find((v) => youngMaleEn(v) && (nameIncludes(v, 'natural') || nameIncludes(v, 'online'))) ||
         voices.find((v) => youngMaleEn(v)) ||
-        voices.find((v) => maleEn(v) && nameIncludes(v, 'natural')) ||
-        voices.find((v) => maleEn(v) && nameIncludes(v, 'google')) ||
+        voices.find((v) => maleEn(v) && (nameIncludes(v, 'natural') || nameIncludes(v, 'google'))) ||
         voices.find((v) => maleEn(v)) ||
-        voices.find((v) => notFemaleEn(v) && nameIncludes(v, 'natural')) ||
         voices.find((v) => notFemaleEn(v) && nameIncludes(v, 'google')) ||
         voices.find((v) => notFemaleEn(v) && v.lang.toLowerCase().startsWith('en-us')) ||
         voices.find((v) => notFemaleEn(v)) ||
         voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('en-us')) ||
         voices.find((v) => isEn(v)) ||
         null;
+
+      voiceRef.current = picked;
+      // Track whether we actually locked onto a clearly-male voice. If not, the
+      // speak() call lowers pitch harder so even a neutral/female default voice
+      // reads more masculine.
+      pickedIsMaleRef.current = picked ? maleEn(picked) : false;
     };
 
     pickVoice();
@@ -148,12 +161,13 @@ export function useSpeech() {
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
-      // Tuned for a young (~22-year-old) male voice: slightly raised pitch and a
-      // lively rate so it reads youthful without sounding like a child, on
-      // whatever male voice the device provides.
-      utterance.rate = 1.03;
-      utterance.pitch = 1.25;
       if (voiceRef.current) utterance.voice = voiceRef.current;
+      // Voice tuning for a young (~22-year-old) MALE sound:
+      //  - If we locked onto a genuinely male voice, use a light, youthful pitch.
+      //  - If the device only gave a neutral/female default, drop pitch harder so
+      //    it still reads masculine rather than female.
+      utterance.rate = 1.02;
+      utterance.pitch = pickedIsMaleRef.current ? 1.15 : 0.7;
 
       utterance.onstart = () => setSpeaking(true);
       utterance.onend = () => setSpeaking(false);
