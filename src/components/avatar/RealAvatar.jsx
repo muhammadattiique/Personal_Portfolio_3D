@@ -110,9 +110,11 @@ class ModelBoundary extends Component {
 }
 
 function PhotoFallback({ label }) {
-  // Show the portrait EXACTLY as it is in the project directory — full image,
-  // no cropping, no zoom, no circular clip — so every pixel is preserved as-is.
-  // object-contain fits the whole image within the panel at its native aspect.
+  // The source portrait is a circular photo with a blue ring on a white square.
+  // We can't repaint the file's pixels, so we crop INTO the circle: object-cover
+  // + a small scale-up pushes the blue ring and the white corners just past the
+  // panel edge, and the circular panel clips the rest — leaving the face/blazer
+  // cleanly blended into the dark background, properly aligned.
   return (
     <div className="h-full w-full flex items-center justify-center bg-[#0B1020]">
       <img
@@ -121,7 +123,7 @@ function PhotoFallback({ label }) {
         aria-label={label}
         draggable={false}
         decoding="async"
-        className="max-h-full max-w-full h-auto w-auto object-contain select-none"
+        className="h-full w-full object-cover object-center scale-[1.12] select-none"
       />
     </div>
   );

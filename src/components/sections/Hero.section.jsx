@@ -229,9 +229,10 @@ export function Hero() {
                   }`}
                 />
 
-                {/* Avatar panel — square with soft-rounded corners so the full
-                    portrait shows AS-IS (no circular crop), pixels preserved. */}
-                <div className="relative z-10 w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] md:w-[360px] md:h-[360px] lg:w-[400px] lg:h-[400px] rounded-3xl overflow-hidden border border-accent/30 shadow-[0_18px_60px_-15px_rgba(79,140,255,0.5)] bg-[#0B1020]">
+                {/* Avatar panel — circular with a dark background, so the
+                    portrait's blue ring and white corners are clipped away and
+                    the face blends cleanly, properly aligned. */}
+                <div className="relative z-10 w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] md:w-[360px] md:h-[360px] lg:w-[400px] lg:h-[400px] rounded-full overflow-hidden border border-accent/30 shadow-[0_18px_60px_-15px_rgba(79,140,255,0.5)] bg-[#0B1020]">
                   <Suspense
                     fallback={
                       <div
