@@ -119,28 +119,41 @@ export function useSpeech() {
       const uriMale = (v) =>
         v.voiceURI && /male|#male|-m-|_m_|man/i.test(v.voiceURI) && !/female/i.test(v.voiceURI);
 
+      // Voices that are KNOWN female even though their name has no "female"
+      // keyword — these are the usual culprits for a female default:
+      //   - "Google US English" (female on Chrome)
+      //   - "Microsoft Zira" (female on Windows)
+      const knownFemaleExact = [
+        'google us english', 'google uk english female', 'microsoft zira',
+      ];
+      const isKnownFemaleExact = (v) =>
+        v.name && knownFemaleExact.some((n) => v.name.toLowerCase() === n);
+
       const youngMaleEn = (v) => isEn(v) && anyName(v, youngMaleNames);
       const maleEn = (v) => isEn(v) && (anyName(v, maleNames) || uriMale(v));
-      const isFemale = (v) => anyName(v, femaleNames) || /female|#female/i.test(v.voiceURI || '');
-      const notFemaleEn = (v) => isEn(v) && !isFemale(v);
+      const isFemale = (v) =>
+        anyName(v, femaleNames) ||
+        isKnownFemaleExact(v) ||
+        /female|#female/i.test(v.voiceURI || '');
+      // A voice we're confident is MALE (explicit male name/URI).
+      const confirmedMale = (v) => maleEn(v) && !isFemale(v);
 
+      // ONLY select a voice we're confident is male. We do NOT fall back to a
+      // "not female" voice here, because voices like "Google US English" read as
+      // female but aren't named so — picking them is exactly the bug. If no
+      // confirmed-male voice exists, leave voiceRef null and let speak() force a
+      // low pitch on the device default so it still sounds masculine.
       const picked =
-        voices.find((v) => youngMaleEn(v) && (nameIncludes(v, 'natural') || nameIncludes(v, 'online'))) ||
-        voices.find((v) => youngMaleEn(v)) ||
-        voices.find((v) => maleEn(v) && (nameIncludes(v, 'natural') || nameIncludes(v, 'google'))) ||
-        voices.find((v) => maleEn(v)) ||
-        voices.find((v) => notFemaleEn(v) && nameIncludes(v, 'google')) ||
-        voices.find((v) => notFemaleEn(v) && v.lang.toLowerCase().startsWith('en-us')) ||
-        voices.find((v) => notFemaleEn(v)) ||
-        voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('en-us')) ||
-        voices.find((v) => isEn(v)) ||
+        voices.find((v) => youngMaleEn(v) && !isFemale(v) && (nameIncludes(v, 'natural') || nameIncludes(v, 'online'))) ||
+        voices.find((v) => youngMaleEn(v) && !isFemale(v)) ||
+        voices.find((v) => confirmedMale(v) && (nameIncludes(v, 'natural') || nameIncludes(v, 'google'))) ||
+        voices.find((v) => confirmedMale(v)) ||
         null;
 
       voiceRef.current = picked;
-      // Track whether we actually locked onto a clearly-male voice. If not, the
-      // speak() call lowers pitch harder so even a neutral/female default voice
-      // reads more masculine.
-      pickedIsMaleRef.current = picked ? maleEn(picked) : false;
+      // True only when we locked onto a confirmed-male voice. When false, speak()
+      // applies a strong low pitch to the device default to force a male sound.
+      pickedIsMaleRef.current = Boolean(picked);
     };
 
     pickVoice();
@@ -163,11 +176,11 @@ export function useSpeech() {
       utterance.lang = 'en-US';
       if (voiceRef.current) utterance.voice = voiceRef.current;
       // Voice tuning for a young (~22-year-old) MALE sound:
-      //  - If we locked onto a genuinely male voice, use a light, youthful pitch.
-      //  - If the device only gave a neutral/female default, drop pitch harder so
-      //    it still reads masculine rather than female.
-      utterance.rate = 1.02;
-      utterance.pitch = pickedIsMaleRef.current ? 1.15 : 0.7;
+      //  - Confirmed-male voice: light, youthful pitch (~1.1).
+      //  - No male voice on the device (default is female/neutral): drop pitch
+      //    hard (~0.5) so the female default is pulled down into a male register.
+      utterance.rate = 1.0;
+      utterance.pitch = pickedIsMaleRef.current ? 1.1 : 0.5;
 
       utterance.onstart = () => setSpeaking(true);
       utterance.onend = () => setSpeaking(false);
