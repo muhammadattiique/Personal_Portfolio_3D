@@ -55,6 +55,24 @@ export const profile = {
       type: "Certification",
       description: "On-page and technical SEO, keyword strategy, and search ranking fundamentals.",
     },
+    {
+      title: "HTML (HyperText Markup Language)",
+      issuer: "Knowledge Gate",
+      type: "Certification",
+      description: "Semantic HTML5 structure and markup fundamentals for building web pages.",
+    },
+    {
+      title: "CSS (Cascading Style Sheets)",
+      issuer: "Knowledge Gate",
+      type: "Certification",
+      description: "Styling, layout, and responsive design fundamentals with modern CSS.",
+    },
+    {
+      title: "JavaScript",
+      issuer: "Knowledge Gate",
+      type: "Certification",
+      description: "Core JavaScript programming — DOM manipulation, events, and interactivity.",
+    },
   ],
   achievements: [
     {

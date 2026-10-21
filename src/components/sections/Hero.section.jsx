@@ -4,7 +4,7 @@ import { profile } from '../../data/profile';
 import { Button } from '../ui/Button';
 import { MagneticButton } from '../ui/MagneticButton';
 import { Reveal } from '../ui/Reveal';
-import { useSpeech, useReducedMotion } from '../../hooks';
+import { useSpeech, useReducedMotion, useIntroAudio } from '../../hooks';
 
 // Lazy-load the 3D avatar so the hero text renders instantly and the Three.js
 // engine only loads when needed. RealAvatar loads the photo-derived GLB from
@@ -18,25 +18,54 @@ const Avatar3DLazy = lazy(() =>
 const INTRO_DELAY_MS = 3000;
 
 export function Hero() {
-  // One speech instance drives the spoken intro and the 3D avatar's lip-sync.
-  const { speak, stop, speaking, supported } = useSpeech();
+  // Voice sources: a pre-recorded intro audio file (identical on every device)
+  // is preferred; the browser TTS is the fallback when no file is present.
+  const { speak, stop: stopTts, speaking: ttsSpeaking, supported: ttsSupported } = useSpeech();
+  const {
+    play: playAudio,
+    stop: stopAudio,
+    speaking: audioSpeaking,
+    available: audioAvailable,
+  } = useIntroAudio();
   const reducedMotion = useReducedMotion();
   // Fires the intro exactly ONCE per page load — never replays on later clicks.
   const introPlayedRef = useRef(false);
   // One-time hint overlay telling the visitor to tap to hear the intro.
   const [showHint, setShowHint] = useState(false);
 
+  // The avatar speaks if EITHER the recorded audio or the TTS is playing.
+  const speaking = audioSpeaking || ttsSpeaking;
+  // Show voice UI/hint when any voice path is usable (recorded file or TTS).
+  const supported = audioAvailable === true || ttsSupported;
+
   const scrollToWork = () => {
     const el = document.getElementById('work');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const startIntro = () => {
-    introPlayedRef.current = true;
-    speak(profile.voiceIntro);
+  // Play the recorded file if available; otherwise speak via browser TTS.
+  const playIntroVoice = () => {
+    if (audioAvailable === true) {
+      playAudio().catch(() => {
+        // If the browser blocked audio playback, fall back to TTS.
+        if (ttsSupported) speak(profile.voiceIntro);
+      });
+    } else if (ttsSupported) {
+      speak(profile.voiceIntro);
+    }
   };
 
-  const replayIntro = () => (speaking ? stop() : speak(profile.voiceIntro));
+  const stopVoice = () => {
+    stopAudio();
+    stopTts();
+  };
+
+  const startIntro = () => {
+    introPlayedRef.current = true;
+    playIntroVoice();
+  };
+
+  const replayIntro = () => (speaking ? stopVoice() : playIntroVoice());
 
   // One-time "tap anywhere" intro, per your request:
   //   - Browsers block audio before any user gesture, so we don't fight that.
@@ -200,9 +229,9 @@ export function Hero() {
                   }`}
                 />
 
-                {/* Avatar panel — circular, dark background so the circular
-                    portrait aligns edge-to-edge with no white box or blue ring. */}
-                <div className="relative z-10 w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] md:w-[320px] md:h-[320px] lg:w-[360px] lg:h-[360px] rounded-full overflow-hidden border border-accent/30 shadow-[0_18px_60px_-15px_rgba(79,140,255,0.5)] bg-[#0B1020]">
+                {/* Avatar panel — square with soft-rounded corners so the full
+                    portrait shows AS-IS (no circular crop), pixels preserved. */}
+                <div className="relative z-10 w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] md:w-[360px] md:h-[360px] lg:w-[400px] lg:h-[400px] rounded-3xl overflow-hidden border border-accent/30 shadow-[0_18px_60px_-15px_rgba(79,140,255,0.5)] bg-[#0B1020]">
                   <Suspense
                     fallback={
                       <div

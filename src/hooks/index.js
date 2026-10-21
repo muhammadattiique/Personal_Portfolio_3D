@@ -204,3 +204,6 @@ export function useSpeech() {
 
   return { speak, stop, speaking, supported };
 }
+
+// Re-export the pre-recorded intro audio hook for a consistent cross-device voice.
+export { useIntroAudio } from './useIntroAudio';
