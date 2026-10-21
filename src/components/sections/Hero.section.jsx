@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useRef } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUpRight, Download, Volume2, VolumeX } from 'lucide-react';
 import { profile } from '../../data/profile';
 import { Button } from '../ui/Button';
@@ -21,7 +21,10 @@ export function Hero() {
   // One speech instance drives the spoken intro and the 3D avatar's lip-sync.
   const { speak, stop, speaking, supported } = useSpeech();
   const reducedMotion = useReducedMotion();
-  const introStartedRef = useRef(false);
+  // Fires the intro exactly ONCE per page load — never replays on later clicks.
+  const introPlayedRef = useRef(false);
+  // One-time hint overlay telling the visitor to tap to hear the intro.
+  const [showHint, setShowHint] = useState(false);
 
   const scrollToWork = () => {
     const el = document.getElementById('work');
@@ -29,39 +32,36 @@ export function Hero() {
   };
 
   const startIntro = () => {
-    introStartedRef.current = true;
+    introPlayedRef.current = true;
     speak(profile.voiceIntro);
   };
 
-  const replayIntro = () => (speaking ? stop() : startIntro());
+  const replayIntro = () => (speaking ? stop() : speak(profile.voiceIntro));
 
-  // Auto-start the intro ~3 seconds after each page load / reload.
-  //
-  // Browsers block audio autoplay until the user has interacted with the page
-  // at least once, so a timed autoplay on a fresh load may be silently blocked.
-  // Robust pattern:
-  //   1. Arm the 3s timer; it attempts to speak.
-  //   2. ALSO arm first-gesture listeners (pointer/key/scroll/touch). If the
-  //      timed attempt was blocked, the very first interaction starts it.
-  // We only consider the intro "done" once speech has ACTUALLY started (tracked
-  // via introStartedRef), so a blocked attempt never permanently disables it.
-  // It runs once per page load (not on re-renders); every reload plays again.
+  // One-time "tap anywhere" intro, per your request:
+  //   - Browsers block audio before any user gesture, so we don't fight that.
+  //   - On load we show a subtle hint ("Tap anywhere to hear my introduction").
+  //   - The FIRST interaction (click / tap / scroll / key) plays the intro ONCE
+  //     and removes the hint + listeners. It never plays again on later clicks.
+  //   - A 3s timer is still attempted first in case the browser allows autoplay;
+  //     if it plays, the hint is hidden and the gesture path is disarmed.
   useEffect(() => {
     if (!supported) return undefined;
 
-    const beginIntro = () => {
-      if (introStartedRef.current) return;
+    setShowHint(true);
+
+    const playOnce = () => {
+      if (introPlayedRef.current) return;
       startIntro();
-    };
-
-    // 1. Timed attempt after the configured delay.
-    const timer = window.setTimeout(beginIntro, INTRO_DELAY_MS);
-
-    // 2. First-gesture fallback for browsers that block timed autoplay.
-    const handleFirstGesture = () => {
-      beginIntro();
+      setShowHint(false);
       removeGestureListeners();
     };
+
+    // 1. Try a timed autoplay (works only where the browser permits it).
+    const timer = window.setTimeout(playOnce, INTRO_DELAY_MS);
+
+    // 2. First-gesture trigger (the reliable path). Fires once, then disarms.
+    const handleFirstGesture = () => playOnce();
     const gestureEvents = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
     const removeGestureListeners = () => {
       gestureEvents.forEach((evt) =>
@@ -69,7 +69,7 @@ export function Hero() {
       );
     };
     gestureEvents.forEach((evt) =>
-      document.addEventListener(evt, handleFirstGesture, { passive: true })
+      document.addEventListener(evt, handleFirstGesture, { passive: true, once: false })
     );
 
     return () => {
@@ -79,12 +79,30 @@ export function Hero() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supported]);
 
+  // Hide the hint once speech actually begins (covers the autoplay-allowed case).
+  useEffect(() => {
+    if (speaking) setShowHint(false);
+  }, [speaking]);
+
   const animateSpeaking = speaking && !reducedMotion;
 
   return (
     <section className="relative min-h-[92vh] flex flex-col justify-center pt-28 md:pt-36 pb-16 overflow-hidden">
       {/* Background radial gradient accent */}
       <div className="absolute top-1/4 right-10 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[140px] pointer-events-none" />
+
+      {/* One-time "tap to hear intro" hint. Browsers block audio until the first
+          user gesture, so this invites that gesture. It disappears after the
+          intro plays once and never returns. */}
+      {supported && showHint && !speaking && (
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-surface/90 border border-accent/40 text-foreground text-sm font-mono backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.4)] animate-pulse-subtle pointer-events-none"
+          role="status"
+        >
+          <Volume2 size={16} className="text-accent" />
+          <span>Tap anywhere to hear my introduction</span>
+        </div>
+      )}
 
       <div className="max-w-editorial mx-auto px-5 md:px-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
