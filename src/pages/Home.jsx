@@ -4,7 +4,10 @@ import { SelectedWork } from '../components/sections/SelectedWork.section';
 import { About } from '../components/sections/About.section';
 import { Skills } from '../components/sections/Skills.section';
 import { Experience } from '../components/sections/Experience.section';
+import { Education } from '../components/sections/Education.section';
+import { Certifications } from '../components/sections/Certifications.section';
 import { Services } from '../components/sections/Services.section';
+import { AskMe } from '../components/sections/AskMe.section';
 import { Contact } from '../components/sections/Contact.section';
 import { profile } from '../data/profile';
 
@@ -28,7 +31,10 @@ export default function Home() {
         <About />
         <Skills />
         <Experience />
+        <Education />
         <Services />
+        <Certifications />
+        <AskMe />
         <Contact />
       </div>
     </>

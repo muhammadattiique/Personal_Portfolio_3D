@@ -148,10 +148,11 @@ export function useSpeech() {
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
-      // Higher pitch + lively rate gives a lighter, thinner ("bareek") young-boy
-      // tone rather than a deep/older voice, on whatever male voice the device has.
+      // Tuned for a young (~22-year-old) male voice: slightly raised pitch and a
+      // lively rate so it reads youthful without sounding like a child, on
+      // whatever male voice the device provides.
       utterance.rate = 1.03;
-      utterance.pitch = 1.4;
+      utterance.pitch = 1.25;
       if (voiceRef.current) utterance.voice = voiceRef.current;
 
       utterance.onstart = () => setSpeaking(true);

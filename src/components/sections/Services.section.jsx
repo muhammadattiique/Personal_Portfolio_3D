@@ -8,7 +8,7 @@ export function Services() {
     <section className="py-24 md:py-32 scroll-mt-20 border-t border-border">
       <div className="max-w-editorial mx-auto px-5 md:px-8">
         <SectionHeader
-          number="05"
+          number="06"
           label="SERVICES &amp; EXPERTISE"
           title="Engineering Disciplines &amp; Problem Domains"
           subtitle="How I help founders, engineering leads, and product teams build robust digital realities."

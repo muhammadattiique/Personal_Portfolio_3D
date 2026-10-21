@@ -34,6 +34,44 @@ export const profile = {
     { value: "15+", label: "GitHub Projects", description: "Public repositories across web, systems & backend" },
     { value: "1", label: "SW Engineering Internship", description: "Backend, DevOps & CI/CD experience in industry" },
   ],
+  // Certifications & achievements (shown in the Certifications section and used
+  // by the avatar's portfolio Q&A knowledge base).
+  certifications: [
+    {
+      title: "MERN Stack Development",
+      issuer: "DigiSkills",
+      type: "Certification",
+      description: "Full-stack web development with MongoDB, Express, React, and Node.js.",
+    },
+    {
+      title: "Artificial Intelligence Using Python",
+      issuer: "DigiSkills",
+      type: "Certification",
+      description: "Applied AI and machine-learning fundamentals implemented in Python.",
+    },
+    {
+      title: "Search Engine Optimization (SEO)",
+      issuer: "DigiSkills",
+      type: "Certification",
+      description: "On-page and technical SEO, keyword strategy, and search ranking fundamentals.",
+    },
+  ],
+  achievements: [
+    {
+      title: "AI Hackathon Winner",
+      issuer: "AI Hackathon",
+      type: "Achievement",
+      description: "Won an AI Hackathon, building an AI-driven solution under a competitive, time-boxed challenge.",
+    },
+  ],
+  // Spoken-friendly answer for "what are your future interests / goals" — rooted
+  // in the Computer Science (BSCS) background, with a focus on cybersecurity and
+  // AI/ML. Editable in one place.
+  futureInterests:
+    "Right now, as a Computer Science student, I'm specializing in general computing — building strong, broad foundations across software engineering, systems, and the web. Looking ahead, I want to grow into two areas I'm genuinely passionate about: cybersecurity and AI and machine learning. On the security side, I plan to go deeper into secure systems, authentication, encryption, and network security, building on my background in computer networks and socket programming. On the AI and ML side, I'm excited about training and applying machine-learning models and building real-world AI solutions — I already won an AI hackathon. My long-term goal is to combine the two: engineering intelligent systems that are also secure, reliable, and production-ready.",
+  // Spoken-friendly answer for "what is your qualification / are you qualified".
+  qualificationSummary:
+    "I'm a Computer Science undergraduate, pursuing a Bachelor of Science in Computer Science at PMAS Arid Agriculture University Rawalpindi, expected to graduate in 2027, with a CGPA of 3.84 out of 4.00 and six semesters completed. Alongside the degree, I hold certifications in MERN Stack Development, Artificial Intelligence Using Python, and Search Engine Optimization from DigiSkills, and I'm an AI Hackathon winner. I also have hands-on industry experience from software engineering internships.",
   services: [
     {
       number: "01",

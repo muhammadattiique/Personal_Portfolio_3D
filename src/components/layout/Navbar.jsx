@@ -17,6 +17,8 @@ export function Navbar() {
     { label: 'About', href: '#about', to: '/#about' },
     { label: 'Skills', href: '#skills', to: '/#skills' },
     { label: 'Experience', href: '#experience', to: '/#experience' },
+    { label: 'Education', href: '#education', to: '/#education' },
+    { label: 'Certifications', href: '#certifications', to: '/#certifications' },
     { label: 'Contact', href: '#contact', to: '/#contact' },
   ];
 

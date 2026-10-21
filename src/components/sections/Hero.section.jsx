@@ -4,19 +4,21 @@ import { profile } from '../../data/profile';
 import { Button } from '../ui/Button';
 import { MagneticButton } from '../ui/MagneticButton';
 import { Reveal } from '../ui/Reveal';
-import { AvatarImage } from '../avatar/AvatarImage';
 import { useSpeech, useReducedMotion } from '../../hooks';
 
 // Lazy-load the 3D avatar so the hero text renders instantly and the Three.js
-// engine only loads when needed. The AvatarImage portrait shows as the Suspense
-// fallback (and inside Avatar3D as the model's own fallback).
+// engine only loads when needed. RealAvatar loads the photo-derived GLB from
+// /public/models/my-avatar.glb and shows the photo portrait as a fallback until
+// that model is present.
 const Avatar3DLazy = lazy(() =>
-  import('../avatar/Avatar3D').then((m) => ({ default: m.Avatar3D }))
+  import('../avatar/RealAvatar').then((m) => ({ default: m.RealAvatar }))
 );
 
+// Auto-start the spoken introduction this many ms after the page loads.
+const INTRO_DELAY_MS = 3000;
+
 export function Hero() {
-  // Single source of truth: this one useSpeech instance drives BOTH the spoken
-  // intro and the avatar's lip-sync (speaking flag passed into Avatar3D).
+  // One speech instance drives the spoken intro and the 3D avatar's lip-sync.
   const { speak, stop, speaking, supported } = useSpeech();
   const reducedMotion = useReducedMotion();
   const introStartedRef = useRef(false);
@@ -33,39 +35,29 @@ export function Hero() {
 
   const replayIntro = () => (speaking ? stop() : startIntro());
 
-  // Auto-start the intro on page load / reload. Browsers block audio autoplay
-  // without a prior user gesture, so guaranteed-on-every-load autoplay is not
-  // reliable. Best-effort pattern:
-  //   1. Attempt to start immediately on mount.
-  //   2. Also arm a one-time first-gesture listener that starts the intro if it
-  //      hasn't begun yet, then removes itself.
-  // A module/session flag keeps it to once per page load (re-renders won't
-  // re-trigger), while a fresh reload starts a new session and plays again.
+  // Auto-start the intro ~3 seconds after each page load / reload.
+  //
+  // Browsers block audio autoplay until the user has interacted with the page
+  // at least once, so a timed autoplay on a fresh load may be silently blocked.
+  // Robust pattern:
+  //   1. Arm the 3s timer; it attempts to speak.
+  //   2. ALSO arm first-gesture listeners (pointer/key/scroll/touch). If the
+  //      timed attempt was blocked, the very first interaction starts it.
+  // We only consider the intro "done" once speech has ACTUALLY started (tracked
+  // via introStartedRef), so a blocked attempt never permanently disables it.
+  // It runs once per page load (not on re-renders); every reload plays again.
   useEffect(() => {
-    if (!supported) return;
-    if (typeof window !== 'undefined' &&
-        window.sessionStorage?.getItem('introPlayed') === '1') {
-      return;
-    }
-
-    const markPlayed = () => {
-      try {
-        window.sessionStorage?.setItem('introPlayed', '1');
-      } catch {
-        // sessionStorage may be unavailable (privacy mode); ignore.
-      }
-    };
+    if (!supported) return undefined;
 
     const beginIntro = () => {
       if (introStartedRef.current) return;
       startIntro();
-      markPlayed();
     };
 
-    // 1. Best-effort immediate start.
-    beginIntro();
+    // 1. Timed attempt after the configured delay.
+    const timer = window.setTimeout(beginIntro, INTRO_DELAY_MS);
 
-    // 2. First-gesture fallback for browsers that blocked the autoplay attempt.
+    // 2. First-gesture fallback for browsers that block timed autoplay.
     const handleFirstGesture = () => {
       beginIntro();
       removeGestureListeners();
@@ -77,12 +69,17 @@ export function Hero() {
       );
     };
     gestureEvents.forEach((evt) =>
-      document.addEventListener(evt, handleFirstGesture, { passive: true, once: false })
+      document.addEventListener(evt, handleFirstGesture, { passive: true })
     );
 
-    return removeGestureListeners;
+    return () => {
+      window.clearTimeout(timer);
+      removeGestureListeners();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supported]);
+
+  const animateSpeaking = speaking && !reducedMotion;
 
   return (
     <section className="relative min-h-[92vh] flex flex-col justify-center pt-28 md:pt-36 pb-16 overflow-hidden">
@@ -92,7 +89,7 @@ export function Hero() {
       <div className="max-w-editorial mx-auto px-5 md:px-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Editorial Headline & Copy */}
-          <div className="lg:col-span-7 flex flex-col items-start z-10">
+          <div className="lg:col-span-7 flex flex-col items-start z-10 order-2 lg:order-1">
             {/* Status Chip */}
             <Reveal delay={0.1}>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border text-foreground font-mono text-xs uppercase tracking-wider mb-6">
@@ -173,50 +170,60 @@ export function Hero() {
             </Reveal>
           </div>
 
-          {/* Right Column: 3D Avatar Specimen */}
-          <div className="lg:col-span-5 relative flex items-center justify-center">
-            <Reveal delay={0.3} className="w-full">
-              <div className="relative w-full aspect-square max-w-[480px] mx-auto rounded-3xl bg-surface/50 border border-border backdrop-blur-sm overflow-hidden flex items-center justify-center">
-                {/* Subtle internal ring decoration */}
-                <div className="absolute inset-4 rounded-2xl border border-white/5 pointer-events-none" />
+          {/* Right Column: Speaking 3D Avatar */}
+          <div className="lg:col-span-5 relative flex items-center justify-center order-1 lg:order-2">
+            <Reveal delay={0.3} className="w-full flex justify-center">
+              <div className="group relative flex items-center justify-center">
+                {/* Soft blue glow behind the avatar; pulses while speaking. */}
+                <div
+                  aria-hidden="true"
+                  className={`absolute inset-0 rounded-full bg-accent/20 blur-3xl scale-90 transition-all duration-500 group-hover:bg-accent/35 group-hover:scale-100 ${
+                    animateSpeaking ? 'avatar-speaking-glow' : ''
+                  }`}
+                />
 
-                <Suspense
-                  fallback={
-                    <AvatarImage className="h-full w-full" height="100%" speaking={speaking} />
-                  }
-                >
-                  <Avatar3DLazy className="h-full w-full" height="100%" speaking={speaking} />
-                </Suspense>
-
-                {/* Subtle replay / stop affordance — the intro auto-starts, so this
-                    is a small secondary control, not the primary play button. */}
-                {supported && (
-                  <button
-                    type="button"
-                    onClick={replayIntro}
-                    aria-label={
-                      speaking
-                        ? 'Stop introduction audio'
-                        : 'Replay audio introduction'
+                {/* Avatar panel — circular, dark background so the circular
+                    portrait aligns edge-to-edge with no white box or blue ring. */}
+                <div className="relative z-10 w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] md:w-[320px] md:h-[320px] lg:w-[360px] lg:h-[360px] rounded-full overflow-hidden border border-accent/30 shadow-[0_18px_60px_-15px_rgba(79,140,255,0.5)] bg-[#0B1020]">
+                  <Suspense
+                    fallback={
+                      <div
+                        aria-label="Loading avatar"
+                        className="h-full w-full animate-pulse bg-[#0B1020]"
+                      />
                     }
-                    className="absolute bottom-4 right-4 z-10 inline-flex items-center justify-center w-9 h-9 rounded-full bg-surface/80 border border-border text-muted backdrop-blur-sm hover:text-accent hover:border-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
-                    {speaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                  </button>
-                )}
+                    <Avatar3DLazy className="h-full w-full" height="100%" speaking={speaking} />
+                  </Suspense>
 
-                {/* Speaking indicator */}
-                {supported && speaking && (
-                  <span className="absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface/80 border border-border text-muted font-mono text-[10px] uppercase tracking-wider backdrop-blur-sm">
-                    <span className="relative flex w-2 h-2">
-                      {!reducedMotion && (
-                        <span className="absolute inline-flex w-full h-full rounded-full bg-accent opacity-75 animate-ping" />
-                      )}
-                      <span className="relative inline-flex w-2 h-2 rounded-full bg-accent" />
+                  {/* Replay / stop control — the intro auto-starts after 4s, so
+                      this is a small secondary affordance, not a primary button. */}
+                  {supported && (
+                    <button
+                      type="button"
+                      onClick={replayIntro}
+                      aria-label={
+                        speaking ? 'Stop introduction audio' : 'Play audio introduction'
+                      }
+                      className="absolute z-20 bottom-3 right-3 inline-flex items-center justify-center w-10 h-10 rounded-full bg-surface/85 border border-border text-muted backdrop-blur-sm hover:text-accent hover:border-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    >
+                      {speaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                    </button>
+                  )}
+
+                  {/* Speaking indicator chip */}
+                  {supported && speaking && (
+                    <span className="absolute z-20 bottom-3 left-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface/90 border border-border text-foreground font-mono text-[10px] uppercase tracking-wider backdrop-blur-sm whitespace-nowrap">
+                      <span className="relative flex w-2 h-2">
+                        {!reducedMotion && (
+                          <span className="absolute inline-flex w-full h-full rounded-full bg-accent opacity-75 animate-ping" />
+                        )}
+                        <span className="relative inline-flex w-2 h-2 rounded-full bg-accent" />
+                      </span>
+                      Speaking…
                     </span>
-                    Speaking…
-                  </span>
-                )}
+                  )}
+                </div>
               </div>
             </Reveal>
           </div>
@@ -241,4 +248,3 @@ export function Hero() {
     </section>
   );
 }
-

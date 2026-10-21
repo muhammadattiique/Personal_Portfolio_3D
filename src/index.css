@@ -108,12 +108,44 @@
     scrollbar-width: none;
   }
 
-  /* Speaking avatar: pulsing soft glow near the mouth area */
-  @keyframes avatarMouthGlow {
-    0%, 100% { opacity: 0.25; transform: translateX(-50%) scale(0.85); }
-    50%      { opacity: 0.6;  transform: translateX(-50%) scale(1.1); }
+  /* Visible, themed vertical scrollbar for the avatar chat transcript. */
+  .avatar-chat-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) transparent;
   }
-  .avatar-mouth-glow {
-    animation: avatarMouthGlow 0.5s ease-in-out infinite;
+  .avatar-chat-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  .avatar-chat-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .avatar-chat-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--accent-soft-color);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  .avatar-chat-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-color);
+    background-clip: padding-box;
+  }
+
+  /* Speaking avatar (photo portrait): subtle scale "breathing" pulse while the
+     intro audio plays, so the static image reads as actively speaking. */
+  @keyframes avatarSpeakingPulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.025); }
+  }
+  .avatar-speaking-pulse {
+    animation: avatarSpeakingPulse 1.1s ease-in-out infinite;
+  }
+
+  /* Speaking avatar: the blue glow behind the portrait pulses in sync. */
+  @keyframes avatarSpeakingGlow {
+    0%, 100% { opacity: 0.4; transform: scale(0.92); }
+    50%      { opacity: 0.85; transform: scale(1.06); }
+  }
+  .avatar-speaking-glow {
+    animation: avatarSpeakingGlow 1.1s ease-in-out infinite;
   }
 }
