@@ -67,16 +67,19 @@ export function Hero() {
 
   const replayIntro = () => (speaking ? stopVoice() : playIntroVoice());
 
-  // One-time "tap anywhere" intro, per your request:
+  // One-time "tap anywhere" intro.
   //   - Browsers block audio before any user gesture, so we don't fight that.
   //   - On load we show a subtle hint ("Tap anywhere to hear my introduction").
   //   - The FIRST interaction (click / tap / scroll / key) plays the intro ONCE
   //     and removes the hint + listeners. It never plays again on later clicks.
-  //   - A 3s timer is still attempted first in case the browser allows autoplay;
-  //     if it plays, the hint is hidden and the gesture path is disarmed.
+  //   - A 3s timer is still attempted first in case the browser allows autoplay.
+  //
+  // NOTE: this effect arms ONCE on mount and must NOT depend on the async audio
+  // probe (audioAvailable) — otherwise it tears down and re-arms the gesture
+  // listeners mid-session, which is what dropped the click handler. The actual
+  // voice source (recorded file vs. TTS) is resolved at click time inside
+  // playIntroVoice(), so this effect doesn't need to know it up front.
   useEffect(() => {
-    if (!supported) return undefined;
-
     setShowHint(true);
 
     const playOnce = () => {
@@ -106,7 +109,7 @@ export function Hero() {
       removeGestureListeners();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supported]);
+  }, []);
 
   // Hide the hint once speech actually begins (covers the autoplay-allowed case).
   useEffect(() => {
