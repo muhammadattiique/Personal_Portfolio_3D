@@ -91,7 +91,14 @@ export function AvatarChat({ speak, stop, speaking, supported, muted, onToggleMu
     const reply = getAvatarResponse(question);
     // A general projects question shows a clickable picker of all projects.
     const picker = isProjectsQuery(question);
-    setMessages((prev) => [...prev, { from: 'avatar', text: reply, picker }]);
+    setMessages((prev) => [
+      ...prev,
+      { from: 'user', text: question },
+      { from: 'avatar', text: reply, picker },
+    ]);
+    // Speak SYNCHRONOUSLY here — this runs inside the send/tap gesture, which is
+    // what iOS/Safari require to allow audio. A deferred (setTimeout) call would
+    // be outside the gesture and could be blocked on mobile.
     if (supported && !muted) speak(toSpeech(reply));
   };
 
@@ -99,10 +106,8 @@ export function AvatarChat({ speak, stop, speaking, supported, muted, onToggleMu
     const text = (raw ?? input).trim();
     if (!text) return;
     setError('');
-    setMessages((prev) => [...prev, { from: 'user', text }]);
     setInput('');
-    // Small delay so the user's message paints before the avatar answers.
-    window.setTimeout(() => answerAndSpeak(text), 120);
+    answerAndSpeak(text);
   };
 
   // Clicking a project in the picker: echo the choice, then answer + speak the
