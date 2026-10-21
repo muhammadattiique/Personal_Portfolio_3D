@@ -179,11 +179,13 @@ export function useSpeech() {
       //  - Confirmed-male voice: light, youthful pitch (~1.1).
       //  - No male voice on the device (default is female/neutral): drop pitch
       //    hard (~0.5) so the female default is pulled down into a male register.
-      // Confirmed-male voice: natural low-ish male pitch. No male voice on the
-      // device (female/neutral default): push pitch to the floor and slow the
-      // rate a touch so it clearly reads as a man, not a woman.
-      utterance.rate = pickedIsMaleRef.current ? 1.0 : 0.92;
-      utterance.pitch = pickedIsMaleRef.current ? 0.9 : 0.1;
+      // Confirmed-male voice (e.g. a laptop with "David"): natural male pitch.
+      // No male voice on the device (common on phones — only a female/neutral
+      // default): lower the pitch to sound masculine, but NOT to the floor.
+      // Very low pitch (~0.1) distorts and "vibrates" on mobile TTS engines, so
+      // use a moderate 0.7 that still reads male without breaking up.
+      utterance.rate = 1.0;
+      utterance.pitch = pickedIsMaleRef.current ? 0.9 : 0.7;
 
       utterance.onstart = () => setSpeaking(true);
       utterance.onend = () => setSpeaking(false);
